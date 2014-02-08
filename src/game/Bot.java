@@ -35,11 +35,11 @@ public abstract class Bot {
 		window.updateCards(c1, c2);
 	}
 	
-	public void registerView(ViewWindow window){
+	public void registerView(ViewWindow window) {
 		this.window = window;
 	}
 	
-	public String toString(){
+	public String toString() {
 		return getName();
 	}
 
