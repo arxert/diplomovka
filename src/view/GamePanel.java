@@ -1,6 +1,7 @@
 package view;
 
 import game.Card;
+import game.GameEngine;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,7 +14,8 @@ import javax.swing.JPanel;
 
 import bots.Person;
 
-import utils.ListOfPlayers;
+import utils.*;
+import utils.Value.state;
 
 public class GamePanel extends JPanel {
 
@@ -31,9 +33,9 @@ public class GamePanel extends JPanel {
 	
 	private JLabel[] cards = new JLabel[5];
 	
-	public GamePanel(ListOfPlayers pls){
+	public GamePanel(GameEngine gE, ListOfPlayers pls){
 		initPanel();
-		addComponents(pls);
+		addComponents(gE, pls);
 	}
 	
 	public void setFlop(Card c1, Card c2, Card c3){
@@ -67,28 +69,61 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	private void addComponents(ListOfPlayers pls){
+	private void addComponents(GameEngine gE, ListOfPlayers pls){
 		int i = 0;
 		for (i = 0; i < 4; i++){
 			if (pls.getPlayer(i) != null){
 				if (pls.getPlayer(i).getName().equals(Person.getStaticName()))
-					this.players[i] = new PlayerWindow(pls.getPlayer(i));
+					this.players[i] = new PlayerWindow(gE, pls.getPlayer(i));
 				else
-					this.players[i] = new BotWindow(pls.getPlayer(i));
+					this.players[i] = new ViewWindow(gE, pls.getPlayer(i));
 				pnlNorth.add(this.players[i]);
 			}
 		}
 		for (; i < 9; i++){
 			if (pls.getPlayer(i) != null){
 				if (pls.getPlayer(i).getName().equals(Person.getStaticName()))
-					this.players[i] = new PlayerWindow(pls.getPlayer(i));
+					this.players[i] = new PlayerWindow(gE, pls.getPlayer(i));
 				else
-					this.players[i] = new BotWindow(pls.getPlayer(i));
+					this.players[i] = new ViewWindow(gE, pls.getPlayer(i));
 				pnlSouth.add(this.players[i]);
 			}
 		}
 		add(pnlNorth, BorderLayout.NORTH);
 		add(pnlCenter, BorderLayout.CENTER);
 		add(pnlSouth, BorderLayout.SOUTH);
+	}
+	
+	private ViewWindow getPlayer(int ID){
+		for (ViewWindow v: players){
+			if (v != null)
+				if (v.getID() == ID)
+					return v;
+		}
+		return null;
+	}
+	
+	public void dealedCards(int ID, Card c1, Card c2){
+		getPlayer(ID).updateCards(c1, c2);
+	}
+	
+	public void check(int ID){
+		setStatus(ID, state.checked);
+	}
+	
+	public void fold(int ID){
+		setStatus(ID, state.folded);
+	}
+	
+	public void raise(int ID, double chips){
+		setStatus(ID, state.raised);
+	}
+	
+	public void call(int ID, double chips){
+		setStatus(ID, state.called);
+	}
+	
+	private void setStatus(int ID, state state){
+		getPlayer(ID).setStatus(state);
 	}
 }

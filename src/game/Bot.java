@@ -6,9 +6,9 @@ public abstract class Bot {
 	
 	private int ID;
 	private String name;
-	private Engine engine;
+	private GameEngine engine;
 	private Card c1, c2;
-	private ViewWindow window;
+//	private ViewWindow window;
 	private double chips;
 
 	public abstract void act();
@@ -25,18 +25,26 @@ public abstract class Bot {
 		this.name = name;
 	}
 	
-	public void setEngine(Engine engine){
+	public void setEngine(GameEngine engine){
 		this.engine = engine;
+	}
+	
+	public void dealCard(Card c){
+		if (c1 == null)
+			c1 = c;
+		else 
+			if (c2 == null)
+				c2 = c;
 	}
 	
 	public void dealCard(Card c1, Card c2){
 		this.c1 = c1;
 		this.c2 = c2;
-		window.updateCards(c1, c2);
+//		window.updateCards(c1, c2);
 	}
 	
 	public void registerView(ViewWindow window) {
-		this.window = window;
+//		this.window = window;
 	}
 	
 	public String toString() {
@@ -53,12 +61,12 @@ public abstract class Bot {
 
 	//****** player's actions *****//
 	
-	public void call(){
-		engine.call(ID);
-	}
-	
 	public void check(){
 		engine.check(ID);
+	}
+
+	public void call(double chips){
+		engine.call(ID, chips);
 	}
 	
 	public void raise(double chips){

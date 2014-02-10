@@ -43,7 +43,7 @@ public class ListOfPlayers {
 		return players.size();
 	}
 	
-	public void setEngine(Engine e){
+	public void setEngine(GameEngine e){
 		for (Bot p: players)
 			p.setEngine(e);
 	}

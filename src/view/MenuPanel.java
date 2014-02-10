@@ -1,6 +1,6 @@
 package view;
 
-import game.Engine;
+import game.GameEngine;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -69,7 +69,7 @@ public class MenuPanel extends JFrame {
 		btnNewGame.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				new Engine(getPlayers());
+				new GameEngine(getPlayers());
 			}
 		});
 	}

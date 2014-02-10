@@ -1,4 +1,5 @@
-package view;
+package game;
+
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -8,8 +9,10 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import utils.ListOfPlayers;
+import view.ConsolePanel;
+import view.GamePanel;
 
-public class MainFrame extends JFrame {
+public class ViewEngine extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -20,24 +23,17 @@ public class MainFrame extends JFrame {
 	private JTabbedPane tbPane = new JTabbedPane();
 	
 	private GamePanel gamePanel;
-	private ConsoleWindow consolPanel;
+	private ConsolePanel consolPanel;
 
-	public MainFrame(ListOfPlayers players){
+	public ViewEngine(GameEngine gE, ListOfPlayers players){
 		initFrame();
-		initPanels();
-		initComponents(players);
+		initComponents(gE, players);
 		addComponents();
 	}
 	
-	
-	private void initPanels(){
-//		pnlMain.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
-//		pnlSouth.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
-	}
-	
-	private void initComponents(ListOfPlayers pls){
-		gamePanel = new GamePanel(pls);
-		consolPanel = new ConsoleWindow(pls);
+	private void initComponents(GameEngine gE, ListOfPlayers pls){
+		gamePanel = new GamePanel(gE, pls);
+		consolPanel = new ConsolePanel(pls);
 		tbPane.setPreferredSize(new Dimension(tabWidth, tabHeight));
 	}
 	
@@ -63,11 +59,29 @@ public class MainFrame extends JFrame {
 	//****** player's actions *****//
 	
 	public void fold(int ID){
-		consolPanel.addLog("Player " + ID + " folded");
+		consolPanel.fold(ID);
+		gamePanel.fold(ID);
+//		consolPanel.addLog("Player " + ID + " folded");
 	}
 	
 	public void check(int ID){
-		
+		consolPanel.check(ID);
+		gamePanel.check(ID);
+	}
+	
+	public void raise(int ID, double chips){
+		consolPanel.raise(ID, chips);
+		gamePanel.raise(ID, chips);
+	}
+	
+	public void call(int ID, double chips){
+		consolPanel.call(ID, chips);
+		gamePanel.call(ID, chips);
+	}
+
+	public void dealCard(int ID, Card c1, Card c2){
+		consolPanel.dealedCard(ID, c1, c2);
+		gamePanel.dealedCards(ID, c1, c2);
 	}
 	
 }

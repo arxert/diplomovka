@@ -1,5 +1,7 @@
 package view;
 
+import game.Card;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +17,7 @@ import javax.swing.JTextArea;
 
 import utils.ListOfPlayers;
 
-public class ConsoleWindow extends JPanel {
+public class ConsolePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -27,18 +29,14 @@ public class ConsoleWindow extends JPanel {
 	
 	private JFileChooser flChooser = new JFileChooser("C:/SKOLA/dipl");
 	
-	public ConsoleWindow(ListOfPlayers players){
+	public ConsolePanel(ListOfPlayers players){
 		initFrame();
-		initPanels();
 		initComponents(players);
 		addComponents();
 	}
 	
-	public void addLog(String s){
+	private void addLog(String s){
 		txtGame.append(s + "\n");
-	}
-	
-	private void initPanels(){
 	}
 	
 	private void initComponents(ListOfPlayers pls){
@@ -75,5 +73,29 @@ public class ConsoleWindow extends JPanel {
 	private void initFrame(){
 		setLayout(new BorderLayout());
 		setVisible(true);
+	}
+
+	public void dealedCard(int ID, Card c){
+		addLog("player " + ID + " was dealed card " + c);
+	}
+
+	public void dealedCard(int ID, Card c1, Card c2){
+		addLog("player " + ID + " was dealed cards " + c1 + ", " + c2);
+	}
+	
+	public void check(int ID){
+		addLog("player " + ID + " checked.");
+	}
+	
+	public void fold(int ID){
+		addLog("player " + ID + " folded.");
+	}
+	
+	public void raise(int ID, double chips){
+		addLog("player " + ID + " raised " + chips + ".");
+	}
+	
+	public void call(int ID, double chips){
+		addLog("player " + ID + " called.");
 	}
 }
