@@ -14,6 +14,8 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import bots.Person;
+
 public class PlayerWindow extends ViewWindow {
 
 	private static final long serialVersionUID = 1L;
@@ -29,8 +31,11 @@ public class PlayerWindow extends ViewWindow {
 	
 	private JSlider sldRaise;
 	
+	private Person person;
+	
 	public PlayerWindow(GameEngine gE, Bot pl){
 		super(gE, pl);
+		person = (Person) pl;
 		initComps();
 		setRightPanel();
 		addPanelRight(pnlRight);
@@ -55,13 +60,15 @@ public class PlayerWindow extends ViewWindow {
 		
 		btnCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				check();
+				person.check();
+				person.stop();
 			}
 		});
 		
 		btnFold.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				fold();
+				person.fold();
+				person.stop();
 			}
 		});
 		
@@ -69,7 +76,8 @@ public class PlayerWindow extends ViewWindow {
 			
 			@Override
 			public void actionPerformed(ActionEvent actionevent) {
-				raise(sldRaise.getValue());
+				person.raise(sldRaise.getValue());
+				person.stop();
 			}
 		});
 		
@@ -77,7 +85,8 @@ public class PlayerWindow extends ViewWindow {
 			
 			@Override
 			public void actionPerformed(ActionEvent actionevent) {
-				call(0);
+				person.call(0);
+				person.stop();
 			}
 		});
 	}

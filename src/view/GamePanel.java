@@ -2,6 +2,7 @@ package view;
 
 import game.Card;
 import game.GameEngine;
+import game.Talon;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,35 +22,62 @@ public class GamePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel pnlNorth = new JPanel();
-	private JPanel pnlSouth = new JPanel();
-	private JPanel pnlCenter = new JPanel();
-	
 	private int frameWidth = 700, frameHeight = 450, gameWidth = frameWidth;
 	
 	private Color clBackground = Color.LIGHT_GRAY;
 
 	private ViewWindow[] players = new ViewWindow[9];
 	
+	private JPanel pnlNorth = new JPanel();
+	private JPanel pnlSouth = new JPanel();
+	private JPanel pnlCenter = new JPanel();
+	
 	private JLabel[] cards = new JLabel[5];
+	
+	private Card emptyCard = Talon.getEmptyCard();
+	
+	private boolean canRun = true;
 	
 	public GamePanel(GameEngine gE, ListOfPlayers pls){
 		initPanel();
 		addComponents(gE, pls);
 	}
 	
+	public void canRun(boolean yes){
+		canRun = yes;
+	}
+	
+	public void setState(int ID, Value.state state){
+		if (canRun)
+			getPlayer(ID).setState(state);
+	}
+	
+	public void newRound(){
+		if (canRun)
+			resetCards();
+	}
+	
+	private void resetCards(){
+		for (JLabel c: cards)
+			c.setIcon(emptyCard.getIcon());
+	}
+	
 	public void setFlop(Card c1, Card c2, Card c3){
-		cards[0].setIcon(c1.getIcon());
-		cards[1].setIcon(c2.getIcon());
-		cards[2].setIcon(c3.getIcon());
+		if (canRun) {
+			cards[0].setIcon(c1.getIcon());
+			cards[1].setIcon(c2.getIcon());
+			cards[2].setIcon(c3.getIcon());
+		}
 	}
 	
 	public void setTurn(Card c){
-		cards[3].setIcon(c.getIcon());
+		if (canRun)
+			cards[3].setIcon(c.getIcon());
 	}
 	
 	public void setRiver(Card c){
-		cards[4].setIcon(c.getIcon());
+		if (canRun)
+			cards[4].setIcon(c.getIcon());
 	}
 	
 	private void initPanel(){
@@ -60,13 +88,14 @@ public class GamePanel extends JPanel {
 		pnlNorth.setBackground(clBackground);
 		pnlSouth.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		pnlSouth.setBackground(clBackground);
-		pnlCenter.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 30));
+		pnlCenter.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		pnlCenter.setBackground(Color.WHITE);
 		for (int i = 0; i < cards.length; i++){
 			cards[i] = new JLabel();
 			cards[i].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
 			pnlCenter.add(cards[i]);
 		}
+		resetCards();
 	}
 	
 	private void addComponents(GameEngine gE, ListOfPlayers pls){
@@ -104,26 +133,31 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void dealedCards(int ID, Card c1, Card c2){
-		getPlayer(ID).updateCards(c1, c2);
+		if (canRun)
+			getPlayer(ID).updateCards(c1, c2);
 	}
 	
 	public void check(int ID){
-		setStatus(ID, state.checked);
+		if (canRun)
+			setStatus(ID, state.checked);
 	}
 	
 	public void fold(int ID){
-		setStatus(ID, state.folded);
+		if (canRun)
+			setStatus(ID, state.folded);
 	}
 	
 	public void raise(int ID, double chips){
-		setStatus(ID, state.raised);
+		if (canRun)
+			setStatus(ID, state.raised);
 	}
 	
 	public void call(int ID, double chips){
-		setStatus(ID, state.called);
+		if (canRun)
+			setStatus(ID, state.called);
 	}
 	
 	private void setStatus(int ID, state state){
-		getPlayer(ID).setStatus(state);
+		getPlayer(ID).setState(state);
 	}
 }

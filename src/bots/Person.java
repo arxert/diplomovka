@@ -6,6 +6,8 @@ public class Person extends Bot {
 
 	private static String staticName = "Player";
 	
+	private boolean run = true;
+	
 	public Person(int id) {
 		super(id);
 		setName(getStaticName());
@@ -17,6 +19,17 @@ public class Person extends Bot {
 
 	@Override
 	public void act() {
-		
+		while(run){
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		run = true;
+	}
+	
+	public void stop(){
+		run = false;
 	}
 }

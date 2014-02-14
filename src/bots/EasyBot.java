@@ -11,17 +11,17 @@ public class EasyBot extends Bot {
 		setName(getStaticName());
 	}
 
-//	@Override
-//	public void setName() {
-//		name = staticName;
-//	}
-
 	public static String getStaticName(){
 		return staticName;
 	}
 
 	@Override
 	public void act() {
-		
+//		Random r = new Random();
+//		if (r.nextBoolean())
+//			check();
+//		else
+//			fold();
+		check();
 	}
 }

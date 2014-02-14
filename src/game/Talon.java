@@ -10,23 +10,31 @@ import java.util.LinkedList;
 public class Talon {
 
 	private LinkedList<Card> cards = new LinkedList<>();
+	private static Card emptyCard = new Card(null, null);
 	
 	public Talon(){
 		createAllCards();
 		shuffle();
 	}
 	
-	public void trashCard(Card c){
-		if (cards.contains(c))
-			System.out.println("this card is already in talon");
-		else
-			cards.push(c);
-	}
+//	public void trashCard(Card c){
+//		if (cards.contains(c))
+//			System.out.println("this card is already in talon");
+//		else
+//			cards.push(c);
+//	}
 	
 	public Card getNextCard(){
-		if (cards.isEmpty())
-			return null;
-		return cards.poll();
+		Card c = cards.poll();
+		cards.add(c);
+		return c;
+//		if (cards.isEmpty())
+//			return null;
+//		return cards.poll();
+	}
+	
+	public static Card getEmptyCard(){
+		return emptyCard;
 	}
 	
 	public void shuffle(){

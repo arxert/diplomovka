@@ -23,16 +23,17 @@ public class MenuPanel extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel mainPanel = new JPanel();
-	private int frameWidth = 200, frameHeight = 500, menuWidth = frameWidth;
+	
+	private int frameWidth = 200, frameHeight = 300, menuWidth = frameWidth;
+	private int nmrPlayers = 9;
+	
 	private String title = "Poker Casino";
 	
 	private Color clBackground = Color.GRAY;
 	
 	private JButton btnNewGame = new JButton("New Game");
 
-	private int nmrPlayers = 9;
-	
-	ArrayList<JComboBox<String>> listPlayers = new ArrayList<>();
+	private ArrayList<JComboBox<String>> listPlayers = new ArrayList<>();
 	
 	private Dimension compDim = new Dimension(150, 50);
 	
@@ -58,7 +59,7 @@ public class MenuPanel extends JFrame {
 		for (int i = 0; i < nmrPlayers; i++){
 			listPlayers.add(new JComboBox<String>(Value.players));
 			if ((i == 2) || (i == 6))
-				listPlayers.get(i).setSelectedIndex(1);
+				listPlayers.get(i).setSelectedIndex(2);
 			if ((i == 3) || (i > 6))
 				listPlayers.get(i).setSelectedIndex(2);
 		}
@@ -106,5 +107,6 @@ public class MenuPanel extends JFrame {
 	
 	public static void main(String[] args) {
 		new MenuPanel();
+//		new HandGenerator();
 	}
 }

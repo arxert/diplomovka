@@ -18,9 +18,21 @@ public class Card {
 	private ImageIcon icon;
 	
 	public Card(Value.value value, Value.suit suit){
+		if (value == null){
+			setIcon("empty.png");
+			return;
+		}
 		this.value = value;
 		this.suit = suit;
 		setIcon();
+	}
+
+	public Value.value getValue(){
+		return this.value;
+	}
+
+	public Value.suit getSuit(){
+		return this.suit;
 	}
 	
 	public String getName(){
@@ -50,12 +62,17 @@ public class Card {
 			}
 			return img;
 	}
-	
+
 	private void setIcon(){
 		icon = new ImageIcon(concatenate("img/"));
 	}
+
+	private void setIcon(String path){
+		icon = new ImageIcon("img/" + path);
+	}
 	
 	public String toString(){
-		return "Card: " + getName();
+		return getName();
+//		return "Card: " + getName();
 	}
 }
