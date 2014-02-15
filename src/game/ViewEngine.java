@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import utils.ListOfPlayers;
-import utils.Value;
 import view.GameControlPanel;
 import view.OutputPanel;
 import view.GamePanel;
@@ -20,7 +19,7 @@ public class ViewEngine extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	private int frameWidth = 700, frameHeight = 500, tabWidth = frameWidth - 100, tabHeight = frameHeight - 100;
+	private int frameWidth = 700, frameHeight = 550, tabWidth = frameWidth - 100, tabHeight = frameHeight - 100;
 	
 	private String title = "Game";
 	
@@ -69,9 +68,13 @@ public class ViewEngine extends JFrame {
 		setPreferredSize(new Dimension(frameWidth, frameHeight));
 		setLocation(50, screenSize.height/2 - frameHeight/2);
 		setLocation(screenSize.width/2 - frameWidth/2, screenSize.height/2 - frameHeight/2);
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(0, 10));
 		setVisible(true);
 		setResizable(false);
+	}
+	
+	public void isOnMove(int ID){
+		gamePanel.isOnMove(ID);
 	}
 	
 	public void setSpeed(int speed){
@@ -91,7 +94,7 @@ public class ViewEngine extends JFrame {
 	}
 	
 	public void stopGame(){
-		gameEngine.stopGame();
+		gameEngine.pauseGame();
 	}	
 	
 	public void continueGame(){
@@ -103,55 +106,68 @@ public class ViewEngine extends JFrame {
 	}
 	
 	public void newRound(){
-			gamePanel.newRound();
+		gamePanel.newRound();
 	}
 	
 	public void setFlop(Card c1, Card c2, Card c3){
-			gamePanel.setFlop(c1, c2, c3);
+		gamePanel.setFlop(c1, c2, c3);
 	}
 	
 	public void setTurn(Card c){
-			gamePanel.setTurn(c);
+		gamePanel.setTurn(c);
 	}
 	
 	public void setRiver(Card c){
-			gamePanel.setRiver(c);
+		gamePanel.setRiver(c);
 	}
 	
-	public void setState(int ID, Value.state state){
-			gamePanel.setState(ID, state);
+//	public void setState(int ID, Value.state state){
+//		gamePanel.setState(ID, state);
+//	}
+
+	public void dealCard(int ID, Card c1, Card c2){
+		if (outputPanel != null)
+			outputPanel.dealedCard(ID, c1, c2);
+		gamePanel.dealedCards(ID, c1, c2);
+	}
+	
+	public void setTxtLog(String s){
+		gamePanel.setTxtLog(s);
 	}
 
 	//****** player's actions *****//
 	
+	public void setNoneState(int ID){
+		gamePanel.noneState(ID);
+	}
+	
 	public void fold(int ID){
 		if (outputPanel != null)
 			outputPanel.fold(ID);
-			gamePanel.fold(ID);
+		gamePanel.fold(ID);
 	}
 	
 	public void check(int ID){
 		if (outputPanel != null)
 			outputPanel.check(ID);
-			gamePanel.check(ID);
+		gamePanel.check(ID);
 	}
 	
 	public void raise(int ID, double chips){
 		if (outputPanel != null)
 			outputPanel.raise(ID, chips);
-			gamePanel.raise(ID, chips);
+		gamePanel.raise(ID, chips);
 	}
 	
 	public void call(int ID, double chips){
 		if (outputPanel != null)
 			outputPanel.call(ID, chips);
-			gamePanel.call(ID, chips);
-	}
-
-	public void dealCard(int ID, Card c1, Card c2){
-		if (outputPanel != null)
-			outputPanel.dealedCard(ID, c1, c2);
-			gamePanel.dealedCards(ID, c1, c2);
+		gamePanel.call(ID, chips);
 	}
 	
+	public void allIn(int ID, double chips){
+		if (outputPanel != null)
+			outputPanel.allIn(ID, chips);
+		gamePanel.allIn(ID, chips);
+	}
 }

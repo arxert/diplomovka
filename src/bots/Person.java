@@ -1,5 +1,6 @@
 package bots;
 
+import view.PlayerWindow;
 import game.Bot;
 
 public class Person extends Bot {
@@ -8,9 +9,21 @@ public class Person extends Bot {
 	
 	private boolean run = true;
 	
+	private PlayerWindow window;
+	
+	private double max = 0;
+	
 	public Person(int id) {
 		super(id);
 		setName(getStaticName());
+	}
+	
+	public void registerWindow(PlayerWindow window){
+		this.window = window;
+	}
+	
+	public double getMax(){
+		return max;
 	}
 	
 	public static String getStaticName(){
@@ -18,7 +31,9 @@ public class Person extends Bot {
 	}
 
 	@Override
-	public void act() {
+	public void act(double max) {
+		this.max = max - getRoundStake();
+		window.go();
 		while(run){
 			try {
 				Thread.sleep(100);
@@ -30,6 +45,7 @@ public class Person extends Bot {
 	}
 	
 	public void stop(){
+		window.setEnabledComps(false);
 		run = false;
 	}
 }

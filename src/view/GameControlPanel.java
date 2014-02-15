@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -7,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import game.ViewEngine;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -25,7 +27,7 @@ public class GameControlPanel extends JPanel {
 	private JCheckBox chckOutputView = new JCheckBox("output");
 	private JCheckBox chckSpeed = new JCheckBox("fast game");
 	
-	private JLabel rounds = new JLabel("rounds: ");
+	private JLabel rounds = new JLabel("rounds: 0");
 	
 	
 	private Dimension compDim = new Dimension(120, 30);
@@ -88,11 +90,12 @@ public class GameControlPanel extends JPanel {
 		add(btnStart);
 		add(btnStop);
 		add(chckSpeed);
-		add(chckGameView);
+		add(chckGameView);	
 		add(chckOutputView);
+		setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Color.BLACK));
 	}
 	
 	private void init(){
-		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
 	}
 }

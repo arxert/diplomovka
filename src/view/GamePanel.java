@@ -12,11 +12,11 @@ import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import bots.Person;
 
 import utils.*;
-import utils.Value.state;
 
 public class GamePanel extends JPanel {
 
@@ -28,6 +28,8 @@ public class GamePanel extends JPanel {
 
 	private ViewWindow[] players = new ViewWindow[9];
 	
+	private JPanel pnlMain = new JPanel(new BorderLayout());
+	private JPanel pnlGame = new JPanel(new BorderLayout());
 	private JPanel pnlNorth = new JPanel();
 	private JPanel pnlSouth = new JPanel();
 	private JPanel pnlCenter = new JPanel();
@@ -36,6 +38,8 @@ public class GamePanel extends JPanel {
 	
 	private Card emptyCard = Talon.getEmptyCard();
 	
+	private JTextField txtLog = new JTextField();
+	
 	private boolean canRun = true;
 	
 	public GamePanel(GameEngine gE, ListOfPlayers pls){
@@ -43,13 +47,13 @@ public class GamePanel extends JPanel {
 		addComponents(gE, pls);
 	}
 	
-	public void canRun(boolean yes){
-		canRun = yes;
+	public void isOnMove(int ID){
+		if (canRun)
+			getPlayer(ID).isOnMove(true);
 	}
 	
-	public void setState(int ID, Value.state state){
-		if (canRun)
-			getPlayer(ID).setState(state);
+	public void canRun(boolean yes){
+		canRun = yes;
 	}
 	
 	public void newRound(){
@@ -84,6 +88,7 @@ public class GamePanel extends JPanel {
 		setPreferredSize(new Dimension(gameWidth, frameHeight));
 		setBackground(clBackground);
 		setLayout(new BorderLayout(10, 0));
+		txtLog.setEditable(false);
 		pnlNorth.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		pnlNorth.setBackground(clBackground);
 		pnlSouth.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -118,9 +123,12 @@ public class GamePanel extends JPanel {
 				pnlSouth.add(this.players[i]);
 			}
 		}
-		add(pnlNorth, BorderLayout.NORTH);
-		add(pnlCenter, BorderLayout.CENTER);
-		add(pnlSouth, BorderLayout.SOUTH);
+		pnlGame.add(pnlNorth, BorderLayout.NORTH);
+		pnlGame.add(pnlCenter, BorderLayout.CENTER);
+		pnlGame.add(pnlSouth, BorderLayout.SOUTH);
+		pnlMain.add(pnlGame, BorderLayout.CENTER);
+		pnlMain.add(txtLog, BorderLayout.SOUTH);
+		add(pnlMain, BorderLayout.CENTER);
 	}
 	
 	private ViewWindow getPlayer(int ID){
@@ -138,26 +146,49 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void check(int ID){
-		if (canRun)
-			setStatus(ID, state.checked);
+		if (canRun){
+//			setStatus(ID, state.checked);
+			getPlayer(ID).check();
+		}
 	}
 	
 	public void fold(int ID){
-		if (canRun)
-			setStatus(ID, state.folded);
+		if (canRun){
+//			setStatus(ID, state.folded);
+			getPlayer(ID).fold();
+		}
 	}
 	
 	public void raise(int ID, double chips){
-		if (canRun)
-			setStatus(ID, state.raised);
+		if (canRun){
+//			setStatus(ID, state.raised);
+			getPlayer(ID).raise(chips);
+		}
 	}
 	
 	public void call(int ID, double chips){
-		if (canRun)
-			setStatus(ID, state.called);
+		if (canRun){
+//			setStatus(ID, state.called);
+			getPlayer(ID).call(chips);
+		}
 	}
 	
-	private void setStatus(int ID, state state){
-		getPlayer(ID).setState(state);
+	public void allIn(int ID, double chips){
+		if (canRun){
+//			setStatus(ID, state.allIn);
+			getPlayer(ID).allIn();
+		}
 	}
+	
+	public void noneState(int ID){
+		getPlayer(ID).noneState();
+	}
+	
+	public void setTxtLog(String s){
+		txtLog.setText("Bank: " + s);
+	}
+	
+//	private void setStatus(int ID, state state){
+//		getPlayer(ID).setState(state);
+//	}
 }

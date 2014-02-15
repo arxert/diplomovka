@@ -1,5 +1,7 @@
 package bots;
 
+import java.util.Random;
+
 import game.Bot;
 
 public class EasyBot extends Bot {
@@ -16,12 +18,21 @@ public class EasyBot extends Bot {
 	}
 
 	@Override
-	public void act() {
-//		Random r = new Random();
-//		if (r.nextBoolean())
-//			check();
-//		else
-//			fold();
-		check();
+	public void act(double max) {
+		max -= getRoundStake();
+		if (max == 0){
+			Random r = new Random();
+			if (r.nextBoolean())
+				check();
+			else
+				raise(20);
+		} else {
+			Random r = new Random();
+			if (r.nextInt(10) < 7)
+				call(max);
+			else
+				raise(max + 25);
+		}
+//		check();
 	}
 }

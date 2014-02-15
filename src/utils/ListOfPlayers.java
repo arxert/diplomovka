@@ -6,10 +6,14 @@ import game.GameEngine;
 
 import java.util.ArrayList;
 
+import utils.Value.state;
+
 public class ListOfPlayers {
 
 	private ArrayList<Bot> players = new ArrayList<>();
 	private double chips;
+	private int size;
+	private Bot temp;
 	
 	public ListOfPlayers(double initChips){
 		chips = initChips;
@@ -17,6 +21,21 @@ public class ListOfPlayers {
 	
 	public Iterable<Bot> getAllPlayers(){
 		return players;
+	}
+	
+	public Bot getNextActivePlayer(int ID){
+		if ((temp = getNext(ID)).getState() != state.folded)
+			return temp;
+		else 
+			return getNextActivePlayer(temp.getID());
+	}
+	
+	public Bot getNext(int ID){
+		for (int i = 0; i < players.size(); i++){
+			if (players.get(i).getID() == ID)
+				return players.get((i + 1) % size);
+		}
+		return null;
 	}
 	
 	public ArrayList<Bot> getActivePlayers(){
@@ -39,11 +58,12 @@ public class ListOfPlayers {
 			}
 			i += 1;
 		}
+		size = players.size();
 	}
 	
-	public Bot getPlayer(int id){
+	public Bot getPlayer(int ID){
 		for (Bot p: players){
-			if (p.getID() == id)
+			if (p.getID() == ID)
 				return p;
 		}
 		return null;
@@ -58,11 +78,12 @@ public class ListOfPlayers {
 	}
 	
 	public int getSize(){
-		return players.size();
+		return size;
 	}
 	
 	public void removePlayer(int ID){
 		players.remove(getPlayer(ID));
+		size -= 1;
 	}
 	
 	public void setEngine(GameEngine e){

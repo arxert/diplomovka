@@ -36,10 +36,12 @@ public class PlayerWindow extends ViewWindow {
 	public PlayerWindow(GameEngine gE, Bot pl){
 		super(gE, pl);
 		person = (Person) pl;
+		person.registerWindow(this);
 		initComps();
 		setRightPanel();
 		addPanelRight(pnlRight);
 		addPanelBot(sldRaise);
+		setEnabledComps(false);
 	}
 	
 	private void initComps(){
@@ -47,45 +49,41 @@ public class PlayerWindow extends ViewWindow {
 		
 		sldRaise = new JSlider(JSlider.HORIZONTAL, 0, 3000, 0);
 		sldRaise.setPreferredSize(dimComp);
+		sldRaise.setOpaque(false);
 		sldRaise.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				setBtnRaiseChips();
 			}
 		});
 		
-		btnCall.setPreferredSize(dimComp);
-		btnFold.setPreferredSize(dimComp);
-		btnRaise.setPreferredSize(dimComp);
 		btnCheck.setPreferredSize(dimComp);
-		
 		btnCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				person.check();
 				person.stop();
 			}
 		});
-		
+
+		btnFold.setPreferredSize(dimComp);
 		btnFold.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				person.fold();
 				person.stop();
 			}
 		});
-		
+
+		btnRaise.setPreferredSize(dimComp);
 		btnRaise.addActionListener(new ActionListener() {
-			
-			@Override
 			public void actionPerformed(ActionEvent actionevent) {
 				person.raise(sldRaise.getValue());
 				person.stop();
 			}
 		});
-		
+
+		btnCall.setPreferredSize(dimComp);
 		btnCall.addActionListener(new ActionListener() {
-			
-			@Override
 			public void actionPerformed(ActionEvent actionevent) {
-				person.call(0);
+				person.call(person.getMax());
 				person.stop();
 			}
 		});
@@ -95,14 +93,35 @@ public class PlayerWindow extends ViewWindow {
 		btnRaise.setText("<html><body>Raise<br>(" + sldRaise.getValue() + ")</body></html>");
 	}
 	
-//	private void setBtnCallChips(double chips){
-//		btnCall.setText("<html><body>Call<br>(" + chips + "$)</body></html>");
-//	}
+	private void setBtnCallChips(double chips){
+		btnCall.setText("<html><body>Call<br>(" + chips + "$)</body></html>");
+	}
+	
+	public void go(){
+		setEnabledComps(true);
+		filterComps();
+	}
+	
+	private void filterComps(){
+		if (person.getMax() == 0){
+			btnCall.setEnabled(false);
+		} else {
+			btnCheck.setEnabled(false);
+			setBtnCallChips(person.getMax());
+		}
+	}
+	
+	public void setEnabledComps(boolean yes){
+		btnCall.setEnabled(yes);
+		btnCheck.setEnabled(yes);
+		btnFold.setEnabled(yes);
+		btnRaise.setEnabled(yes);
+	}
 	
 	private void setRightPanel(){
 		pnlRight.add(btnCheck);
 		pnlRight.add(btnFold);
 		pnlRight.add(btnCall);
-		pnlRight.add(btnRaise);		
+		pnlRight.add(btnRaise);
 	}
 }

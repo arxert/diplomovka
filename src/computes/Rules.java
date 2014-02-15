@@ -1,4 +1,6 @@
-package game;
+package computes;
+
+import game.Card;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -287,7 +289,6 @@ public class Rules {
 		return 0;
 	}
 
-	// might be wrong
 	private static int isStraightFlush(Card[] cards){
 		byte[] bucket = new byte[14];
 		byte res = (byte) 15;

@@ -3,7 +3,6 @@ package view;
 import game.Card;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -23,7 +22,7 @@ public class OutputPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel pnlBot = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
+	private JPanel pnlBot = new JPanel(new BorderLayout(20, 0));
 	
 	private JTextArea txtGame = new JTextArea();
 
@@ -49,7 +48,8 @@ public class OutputPanel extends JPanel {
 	
 	public void end(){
 		try {
-			fileWriter.close();
+			if (writeToFile)
+				fileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -123,8 +123,8 @@ public class OutputPanel extends JPanel {
 	}
 	
 	private void addComponents(){
-		pnlBot.add(btnSave);
-		pnlBot.add(chckImmediateSave);
+		pnlBot.add(btnSave, BorderLayout.CENTER);
+		pnlBot.add(chckImmediateSave, BorderLayout.WEST);
 		add(scrGame, BorderLayout.CENTER);
 		add(pnlBot, BorderLayout.SOUTH);
 	}
@@ -162,5 +162,10 @@ public class OutputPanel extends JPanel {
 	public void call(int ID, double chips){
 		if (canRun)
 			addLog("player " + ID + " called.");
+	}
+	
+	public void allIn(int ID, double chips){
+		if (canRun)
+			addLog("player " + ID + " is all in (" + chips + ").");
 	}
 }

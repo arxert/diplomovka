@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import utils.Value;
+import utils.Value.state;
 
 public class ViewWindow extends JPanel {
 
@@ -22,8 +23,8 @@ public class ViewWindow extends JPanel {
 	
 	private int ID = -1;
 	
-//	private GameEngine gameEngine;
-
+	private Bot bot;
+	
 	private Color clBackground = Color.YELLOW;
 
 	private JPanel pnlLeft = new JPanel();
@@ -33,24 +34,23 @@ public class ViewWindow extends JPanel {
 	private JLabel c2 = new JLabel();
 	private JLabel lblName = new JLabel();
 	private JLabel lblChips = new JLabel();
-
-	private Dimension dimPnl = new Dimension(55, 160);
-		
-	public ViewWindow(GameEngine gE, Bot pl){
-		ID = pl.getID();
-//		gameEngine = gE;
+	
+	private Dimension dimPnl = new Dimension(95, 165);
+	
+	public ViewWindow(GameEngine gE, Bot bot){
+		this.bot = bot;
+		ID = bot.getID();
 		init();
-		setLblChips(500000);
-		setState(pl.getState());
-		initLeft(pl);
+		setState(bot.getState());
+		initLeft();
 		addComponents();
 	}
 	
-	private void initLeft(Bot pl){
-		lblName.setText(String.valueOf(pl.getID()));
+	private void initLeft(){
+		lblName.setText(bot.toString() + " " + bot.getID());
 		c1.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
 		c2.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
-		lblChips.setText(String.valueOf(pl.getChips()));
+		setLblChips(bot.getChips());
 	}
 	
 	private void setLblStatus(String s){
@@ -63,14 +63,23 @@ public class ViewWindow extends JPanel {
 		pnlLeft.setLayout(new BoxLayout(pnlLeft, BoxLayout.PAGE_AXIS));
 		pnlLeft.setBackground(clBackground);
 		setBackground(clBackground);
-		setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		setPreferredSize(dimPnl);
 	}
-
+	
+	public void isOnMove(boolean yes){
+		if (yes){
+			setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+		}
+		else {
+			setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		}
+	}
+	
 	public void addPanelRight(JPanel right){
 		right.setBackground(clBackground);
 		add(right, BorderLayout.EAST);
-		this.dimPnl.setSize(130, dimPnl.height);
+		dimPnl.setSize(130, dimPnl.height);
 		setPreferredSize(dimPnl);
 	}
 
@@ -93,12 +102,16 @@ public class ViewWindow extends JPanel {
 		this.c2.setIcon(c2.getIcon());
 	}
 
-	public void setState(Value.state state){
-		setLblStatus(state.name());
-//		if (state.equals(Value.state.folded))
-//			setVisible(false);
-//		else
-//			setVisible(true);
+	private void setState(Value.state state){
+		isOnMove(false);
+		if (state.equals(Value.state.folded)){
+			setOpaque(false);
+			pnlLeft.setOpaque(false);
+		}
+		else {
+			setOpaque(true);
+			pnlLeft.setOpaque(true);
+		}
 	}
 	
 	private void setLblChips(double chips){
@@ -107,5 +120,40 @@ public class ViewWindow extends JPanel {
 	
 	public int getID(){
 		return ID;
+	}
+
+	//****** player's actions *****//
+	
+	public void raise(double chips){
+		setLblChips(bot.getChips());
+		setLblStatus(state.raised.name() + " " + chips);
+		setState(state.raised);
+		
+	}
+	
+	public void call(double chips){
+		setLblChips(bot.getChips());
+		setLblStatus(state.called.name() + " " + chips);
+		setState(state.called);
+	}
+	
+	public void check(){
+		setState(state.checked);
+		setLblStatus(state.checked.name());
+	}
+	
+	public void fold(){
+		setState(state.folded);
+		setLblStatus(state.folded.name());
+	}
+	
+	public void allIn(){
+		setState(state.allIn);
+		setLblStatus(state.allIn.name());
+	}
+	
+	public void noneState(){
+		setState(state.none);
+		setLblStatus(state.none.name());
 	}
 }
