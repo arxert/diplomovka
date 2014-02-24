@@ -267,11 +267,20 @@ public class Rules {
 		for (int i = 0; i < cards.length; i++){
 			bucket[cards[i].getValue().ordinal()] += 1;
 		}
-		for (int i = 0; i < bucket.length; i++){
-			if (bucket[i] == 2)
-				_2 = i;
-			if (bucket[i] == 3)
+		for (int i = bucket.length - 1; i >= 0; i--){
+			if (bucket[i] == 3){
 				_3 = i;
+				break;
+			}
+		}
+		if (_3 == -1)
+			return 0;
+		for (int i = bucket.length - 1; i >= 0; i--){
+			if (bucket[i] >= 2)
+				if (i != _3){
+					_2 = i;
+					break;
+				}
 		}
 		if (_2 != -1 && _3 != -1)
 			return 0xc00000 | Math.max(_2, _3) << 0x10 | Math.min(_2, _3) << 0xc;

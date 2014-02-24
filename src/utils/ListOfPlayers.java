@@ -1,10 +1,11 @@
 package utils;
 
 
-import game.Bot;
 import game.GameEngine;
 
 import java.util.ArrayList;
+
+import bots.Bot;
 
 import utils.Value.state;
 
@@ -19,7 +20,7 @@ public class ListOfPlayers {
 		chips = initChips;
 	}
 	
-	public Iterable<Bot> getAllPlayers(){
+	public ArrayList<Bot> getAllPlayers(){
 		return players;
 	}
 	
@@ -35,7 +36,8 @@ public class ListOfPlayers {
 			if (players.get(i).getID() == ID)
 				return players.get((i + 1) % size);
 		}
-		return null;
+//		System.out.println("null");
+		return players.get(0);
 	}
 	
 	public ArrayList<Bot> getActivePlayers(){
@@ -51,9 +53,9 @@ public class ListOfPlayers {
 		Bot p = null;
 		int i = 0;
 		for (String s: pls){
-			if ((p = Value.createNewPlayer(s, i)) != null){
+			if ((p = Value.createNewPlayer(s, i, chips)) != null){
 				p.setState(Value.state.none);
-				p.setChips(chips);
+//				p.setChips(chips);
 				players.add(p);
 			}
 			i += 1;
@@ -89,5 +91,14 @@ public class ListOfPlayers {
 	public void setEngine(GameEngine e){
 		for (Bot p: players)
 			p.setEngine(e);
+	}
+	
+	public void checkChipsAll(){
+		for (int i = players.size() - 1; i >= 0; i--){
+			if (players.get(i).getChips() <= 0){
+				players.remove(i);
+				size -= 1;
+			}
+		}
 	}
 }

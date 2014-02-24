@@ -1,35 +1,48 @@
-package game;
+package bots;
 
+import game.Card;
+import game.GameEngine;
+import game.State;
 import utils.Value;
 
 public abstract class Bot {
 	
-	private int ID;
-	private int score;
+	private int steps = 0;
+	protected int ID;
+	protected int score;
 	
-	private double chips;
-	private double totalStake;
-	private double roundStake;
+	protected double chips;
+	protected double totalStake;
+	protected double roundStake;
 	
-	private String name;
+	protected String name;
 	
 	private GameEngine engine;
 	
-	private Card c1, c2;
+	protected Card c1, c2;
 	
-	private Value.state state;
+	protected Value.state state;
 	
-	public Bot(int id){
+	public Bot(int id, double chips){
 		this.ID = id;
+		this.chips = chips;
 	}
 
-	public abstract void act(double max);
+	public abstract void doAct(double max, State state);
+	
+	public void act(double max, State state){
+		steps = 0;
+		if (chips == 0){
+			
+		}
+		doAct(max, state);
+	}
 	
 	public String getName(){
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name){
 		this.name = name;
 	}
 	
@@ -37,13 +50,13 @@ public abstract class Bot {
 		this.engine = engine;
 	}
 	
-	public void dealCard(Card c){
-		if (c1 == null)
-			c1 = c;
-		else 
-			if (c2 == null)
-				c2 = c;
-	}
+//	public void dealCard(Card c){
+//		if (c1 == null)
+//			c1 = c;
+//		else 
+//			if (c2 == null)
+//				c2 = c;
+//	}
 	
 	public void dealCards(Card c1, Card c2){
 		this.c1 = c1;
@@ -62,9 +75,9 @@ public abstract class Bot {
 		return chips;
 	}
 
-	public void setChips(double chips){
-		this.chips = chips;
-	}
+//	public void setChips(double chips){
+//		this.chips = chips;
+//	}
 	
 	public void setState(Value.state state){
 		this.state = state;
@@ -118,16 +131,52 @@ public abstract class Bot {
 	public void newInnerRound(){
 		roundStake = 0;
 	}
+	
+	public double payBlinds(int blind){
+		if (chips > blind){
+			totalStake += blind;
+			roundStake += blind;
+			chips -= blind;
+			return blind;
+		} else {
+			setState(Value.state.allIn);
+			return chips;
+		}
+	}
+	
+	private boolean checkSteps(){
+		if (steps != 0){
+			System.out.println("only one action is allowed");
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean checkChips(double chips){
+//		if (chips > this.chips){
+//			System.out.println("you dont have enough chips to do that act..");
+//			return false;
+//		}
+		return true;
+	}
 
 	//****** player's actions *****//
 	
 	public void check(){
-		roundStake = 0;
+		if (!checkSteps())
+			return;
+		steps += 1;
+//		roundStake = 0;
 		setState(Value.state.checked);
 		engine.check(ID);
 	}
 
 	public void call(double chips){
+		if (!checkSteps())
+			return;
+		if (!checkChips(chips))
+			return;
+		steps += 1;
 		this.chips -= chips; 
 		totalStake += chips;
 		roundStake += chips;
@@ -136,6 +185,11 @@ public abstract class Bot {
 	}
 	
 	public void raise(double chips){
+		if (!checkSteps())
+			return;
+		if (!checkChips(chips))
+			return;
+		steps += 1;
 		this.chips -= chips; 
 		totalStake += chips;
 		roundStake += chips;
@@ -144,12 +198,18 @@ public abstract class Bot {
 	}
 	
 	public void fold(){
+		if (!checkSteps())
+			return;
+		steps += 1;
 		roundStake = 0;
 		setState(Value.state.folded);
 		engine.fold(ID);
 	}
 	
 	public void allIn(){
+		if (!checkSteps())
+			return;
+		steps += 1;
 		totalStake += chips;
 		roundStake += chips;
 		chips = 0;

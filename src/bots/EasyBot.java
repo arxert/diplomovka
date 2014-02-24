@@ -1,15 +1,16 @@
 package bots;
 
+import game.State;
+
 import java.util.Random;
 
-import game.Bot;
 
 public class EasyBot extends Bot {
 
 	private static String staticName = "Easy bot";
 	
-	public EasyBot(int id) {
-		super(id);
+	public EasyBot(int id, double chips) {
+		super(id, chips);
 		setName(getStaticName());
 	}
 
@@ -18,8 +19,8 @@ public class EasyBot extends Bot {
 	}
 
 	@Override
-	public void act(double max) {
-		max -= getRoundStake();
+	public void doAct(double max, State state) {
+		max -= roundStake;
 		if (max == 0){
 			Random r = new Random();
 			if (r.nextBoolean())
@@ -28,10 +29,13 @@ public class EasyBot extends Bot {
 				raise(20);
 		} else {
 			Random r = new Random();
-			if (r.nextInt(10) < 7)
+			if (r.nextInt(10) < 8)
 				call(max);
 			else
-				raise(max + 25);
+				if (r.nextInt(10) < 7)
+					raise(max + 10);
+				else
+					fold();
 		}
 //		check();
 	}

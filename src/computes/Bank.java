@@ -3,7 +3,8 @@ package computes;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import game.Bot;
+import bots.Bot;
+
 
 import utils.ListOfPlayers;
 import utils.Value;
@@ -29,11 +30,11 @@ public class Bank {
 		return chips;
 	}
 	
-	public void splitAll(){
-		System.out.println("splitting");
+	public String splitAll(){
 		double split = 0;
 		double temp = 0;
 		double min = 0;
+		String result = "Bank = " + chips + ", winners: ";
 		ArrayList<Bot> winners = new ArrayList<>();
 		while (chips > 0){
 			maxScore = 0;
@@ -50,11 +51,13 @@ public class Bank {
 						winners.add(bot);
 					}
 			}
+//			if (winners.size() > 1){
+//				try {Thread.sleep(2000);} catch (Exception e) {	e.printStackTrace();}
+//			}
+//			if (Value.hands.values()[((winners.get(0).getScore() & 0xf00000) >> 0x14) - 6] == Value.hands.fullHouse){
+//				try {Thread.sleep(2000);} catch (Exception e) {	e.printStackTrace();}
+//			}
 			Collections.sort(winners, Value.stakeComparator);
-			System.out.println("winners: ");
-			for (Bot b: winners){
-				System.out.println(b.getID());
-			}
 			for (Bot b: winners){
 				min = b.getTotalStake();
 				for (Bot others: bots.getAllPlayers()){
@@ -64,14 +67,18 @@ public class Bank {
 //					System.out.println("others: " + others.getID() + ", temp = " + temp);
 				}
 				for (Bot win: winners){
-					if (win.getState() != state.folded)
+					if (win.getState() != state.folded){
 						win.winsChips(split / winners.size());
+						result += ", " + win.getName() + win.getID() + " - " + split / winners.size() + " (" + Value.hands.values()[((win.getScore() & 0xf00000) >> 0x14) - 6] + ")";
+					}
 				}
-				System.out.println("chips = " + chips + ", split = " + split);
+//				System.out.println("chips = " + chips + ", split = " + split);
 				chips -= split;
+				split = 0;
 				b.setState(state.folded);
 			}
 		}
+		return result;
 	}
 	
 	

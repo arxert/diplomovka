@@ -1,8 +1,9 @@
 package computes;
 
-import game.Bot;
 
 import java.util.ArrayList;
+
+import bots.Bot;
 
 public class SubBank {
 

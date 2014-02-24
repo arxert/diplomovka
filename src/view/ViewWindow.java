@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import game.Bot;
 import game.Card;
 import game.GameEngine;
 
@@ -13,6 +12,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+
+import bots.Bot;
 
 import utils.Value;
 import utils.Value.state;
@@ -122,6 +123,11 @@ public class ViewWindow extends JPanel {
 		return ID;
 	}
 
+	public void updateView(){
+		setLblChips(bot.getChips());
+		setLblStatus(bot.getState().name());
+	}
+	
 	//****** player's actions *****//
 	
 	public void raise(double chips){

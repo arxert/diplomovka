@@ -1,7 +1,7 @@
 package bots;
 
+import game.State;
 import view.PlayerWindow;
-import game.Bot;
 
 public class Person extends Bot {
 
@@ -13,8 +13,8 @@ public class Person extends Bot {
 	
 	private double max = 0;
 	
-	public Person(int id) {
-		super(id);
+	public Person(int id, double chips) {
+		super(id, chips);
 		setName(getStaticName());
 	}
 	
@@ -31,7 +31,7 @@ public class Person extends Bot {
 	}
 
 	@Override
-	public void act(double max) {
+	public void doAct(double max, State state) {
 		this.max = max - getRoundStake();
 		window.go();
 		while(run){

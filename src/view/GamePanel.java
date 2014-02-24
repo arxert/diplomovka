@@ -57,8 +57,12 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void newRound(){
-		if (canRun)
+		if (canRun) {
 			resetCards();
+			for (ViewWindow v: players)
+				if (v != null)
+					v.updateView();
+		}
 	}
 	
 	private void resetCards(){

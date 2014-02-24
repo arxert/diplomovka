@@ -1,6 +1,5 @@
 package view;
 
-import game.Bot;
 import game.GameEngine;
 
 import java.awt.Dimension;
@@ -14,6 +13,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import bots.Bot;
 import bots.Person;
 
 public class PlayerWindow extends ViewWindow {
@@ -109,6 +109,12 @@ public class PlayerWindow extends ViewWindow {
 			btnCheck.setEnabled(false);
 			setBtnCallChips(person.getMax());
 		}
+		setIntervalSlider((int) person.getMax(), (int) person.getChips());
+	}
+	
+	private void setIntervalSlider(int min, int max){
+		sldRaise.setMinimum(min);
+		sldRaise.setMaximum(max);
 	}
 	
 	public void setEnabledComps(boolean yes){

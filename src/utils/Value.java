@@ -2,7 +2,6 @@ package utils;
 
 import java.util.Comparator;
 
-import game.Bot;
 import bots.*;
 
 
@@ -28,11 +27,11 @@ public class Value {
 		EasyBot.getStaticName()
 	};
 	
-	public static Bot createNewPlayer(String s, int i){
+	public static Bot createNewPlayer(String s, int i, double chips){
 		if (s.equals(Person.getStaticName()))
-			return new Person(i);
+			return new Person(i, chips);
 		if (s.equals(EasyBot.getStaticName()))
-			return new EasyBot(i);
+			return new EasyBot(i, chips);
 		return null;
 	}
 
