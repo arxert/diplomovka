@@ -3,6 +3,7 @@ package bots;
 import game.Card;
 import game.GameEngine;
 import game.State;
+import game.Talon;
 import utils.Value;
 
 public abstract class Bot {
@@ -17,11 +18,11 @@ public abstract class Bot {
 	
 	protected String name;
 	
-	private GameEngine engine;
-	
 	protected Card c1, c2;
 	
 	protected Value.state state;
+
+	private GameEngine engine;
 	
 	public Bot(int id, double chips){
 		this.ID = id;
@@ -49,14 +50,6 @@ public abstract class Bot {
 	public void setEngine(GameEngine engine){
 		this.engine = engine;
 	}
-	
-//	public void dealCard(Card c){
-//		if (c1 == null)
-//			c1 = c;
-//		else 
-//			if (c2 == null)
-//				c2 = c;
-//	}
 	
 	public void dealCards(Card c1, Card c2){
 		this.c1 = c1;
@@ -140,7 +133,10 @@ public abstract class Bot {
 			return blind;
 		} else {
 			setState(Value.state.allIn);
-			return chips;
+			totalStake = chips;
+			roundStake = chips;
+			chips = 0;
+			return totalStake;
 		}
 	}
 	
@@ -153,20 +149,28 @@ public abstract class Bot {
 	}
 	
 	private boolean checkChips(double chips){
-//		if (chips > this.chips){
+		if (chips > this.chips){
 //			System.out.println("you dont have enough chips to do that act..");
+//			steps = 0;
+//			allIn();
 //			return false;
-//		}
+		}
 		return true;
 	}
 
+	public void end(){
+		c1 = Talon.getEmptyCard();
+		c2 = Talon.getEmptyCard();
+		setState(Value.state.left);
+		engine.plLeft(ID);
+	}
+	
 	//****** player's actions *****//
 	
 	public void check(){
 		if (!checkSteps())
 			return;
 		steps += 1;
-//		roundStake = 0;
 		setState(Value.state.checked);
 		engine.check(ID);
 	}

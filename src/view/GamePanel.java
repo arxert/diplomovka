@@ -56,9 +56,10 @@ public class GamePanel extends JPanel {
 		canRun = yes;
 	}
 	
-	public void newRound(){
+	public void newRound(boolean cards){
 		if (canRun) {
-			resetCards();
+			if (cards)
+				resetCards();
 			for (ViewWindow v: players)
 				if (v != null)
 					v.updateView();
@@ -144,9 +145,9 @@ public class GamePanel extends JPanel {
 		return null;
 	}
 	
-	public void dealedCards(int ID, Card c1, Card c2){
+	public void dealedCards(int ID){
 		if (canRun)
-			getPlayer(ID).updateCards(c1, c2);
+			getPlayer(ID).updateCards();
 	}
 	
 	public void check(int ID){
@@ -190,6 +191,10 @@ public class GamePanel extends JPanel {
 	
 	public void setTxtLog(String s){
 		txtLog.setText("Bank: " + s);
+	}
+	
+	public void plLeft(int ID){
+		getPlayer(ID).left();
 	}
 	
 //	private void setStatus(int ID, state state){

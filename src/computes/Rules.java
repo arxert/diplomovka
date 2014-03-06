@@ -153,18 +153,23 @@ public class Rules {
 			if (bucket[i] == 2){
 				if (pmax == -1){
 					pmax = i;
-				} else
+				} else 
 					if (pmin == -1){
 						pmin = i;
 					}
+					else
+						if (kicker == -1){
+							kicker = i;
+							break;
+						}
 			} else {
 				if (bucket[i] == 1)
 					if (kicker == -1)
 						kicker = i;
 			}
-			if (pmin != -1)
-				if (kicker == -1)
-					kicker = i;
+//			if (pmin != -1)
+//				if (kicker == -1)
+//					kicker = i;
 		}
 		if (pmin != -1 && pmax != -1)
 			return 0x800000 | pmax << 0x10 | pmin << 0xc | kicker << 0x8;

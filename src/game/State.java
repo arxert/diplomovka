@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import bots.Bot;
 
-import utils.Value;
+import utils.Value.*;
 
 public class State {
 
 	int round, dealerID;
 	int smallBlind, bigBlind;
+	double bank;
 	Card[] cards;
 	ArrayList<Round> rounds = new ArrayList<>();
 	ArrayList<Player> players = new ArrayList<>();
@@ -17,9 +18,9 @@ public class State {
 	class Action {
 		double amount;
 		int botID;
-		Value.state state;
+		state state;
 		
-		public Action(double amount, int botID, Value.state state){
+		public Action(double amount, int botID, state state){
 			this.amount = amount;
 			this.botID = botID;
 			this.state = state;
@@ -43,6 +44,7 @@ public class State {
 		int id;
 		double stack;
 		double inGame;
+		state state;
 		
 		public Player(int id, double stack, double inGame){
 			this.id = id;
@@ -63,6 +65,10 @@ public class State {
 		this.dealerID = dealerID;
 	}
 	
+	public void setBank(double bank){
+		this.bank = bank;
+	}
+	
 	public void setRound(int round, Card[] cards){
 		this.round = round;
 		rounds.add(new Round(round));
@@ -73,11 +79,13 @@ public class State {
 		players.add(new Player(bot.getID(), bot.getChips(), bot.getTotalStake()));
 	}
 	
-	public void addAction(double amount, int botID, Value.state state){
+	public void addAction(double amount, int botID, state state){
 		rounds.get(round).addAction(new Action(amount, botID, state));
 		Player p = getPlayer(botID);
-		if (p != null)
+		if (p != null) {
 			p.setChips(p.stack - amount, p.inGame + amount);
+			p.state = state;
+		}
 	}
 	
 	private Player getPlayer(int ID){
@@ -88,9 +96,9 @@ public class State {
 	}
 	
 	public String toString(){
-		String res = "dealerID = " + dealerID + ", smallBlind = " + smallBlind + ", bigBlind = " + bigBlind + "\nplayers: ";
+		String res = "dealerID = " + dealerID + ", bank = " + bank + ", smallBlind = " + smallBlind + ", bigBlind = " + bigBlind + "\nplayers: ";
 		for (Player p: players){
-			res += "player " + p.id + " (" + p.stack + ", " + p.inGame + "), ";
+			res += "player " + p.id + " (" + p.stack + ", " + p.inGame + ", " + p.state + "), ";
 		}
 		res += "\ncards: ";
 		for (Card c: cards){

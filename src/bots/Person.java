@@ -35,11 +35,7 @@ public class Person extends Bot {
 		this.max = max - getRoundStake();
 		window.go();
 		while(run){
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			try {Thread.sleep(100);} catch (Exception e) {e.printStackTrace();}
 		}
 		run = true;
 	}

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import game.Card;
 import game.GameEngine;
 
 import javax.swing.BorderFactory;
@@ -98,9 +97,14 @@ public class ViewWindow extends JPanel {
 		add(pnlLeft, BorderLayout.WEST);
 	}
 	
-	public void updateCards(Card c1, Card c2){
-		this.c1.setIcon(c1.getIcon());
-		this.c2.setIcon(c2.getIcon());
+//	public void updateCards(Card c1, Card c2){
+//		this.c1.setIcon(c1.getIcon());
+//		this.c2.setIcon(c2.getIcon());
+//	}
+	
+	public void updateCards(){
+		c1.setIcon(bot.getCard1().getIcon());
+		c2.setIcon(bot.getCard2().getIcon());
 	}
 
 	private void setState(Value.state state){
@@ -123,6 +127,14 @@ public class ViewWindow extends JPanel {
 		return ID;
 	}
 
+	public void left(){
+		updateView();
+		updateCards();
+		setState(bot.getState());
+		setOpaque(false);
+		pnlLeft.setOpaque(false);
+	}
+	
 	public void updateView(){
 		setLblChips(bot.getChips());
 		setLblStatus(bot.getState().name());
@@ -134,7 +146,6 @@ public class ViewWindow extends JPanel {
 		setLblChips(bot.getChips());
 		setLblStatus(state.raised.name() + " " + chips);
 		setState(state.raised);
-		
 	}
 	
 	public void call(double chips){

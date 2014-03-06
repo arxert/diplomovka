@@ -25,7 +25,7 @@ public class GameEngine {
 	
 	private Card[] deck = new Card[5];
 	
-	private double initChips = 2000;
+	private double initChips = 10000;
 	
 	private Bank bank;
 	
@@ -106,6 +106,10 @@ public class GameEngine {
 //		bank.allIn(ID, chips);
 	}
 	
+	public void plLeft(int ID){
+		viewEngine.plLeft(ID);
+	}
+	
 	/***** GAME IMPLEMENTATION ******/
 	
 	public void startGame(){
@@ -132,13 +136,15 @@ public class GameEngine {
 	
 	private void play(){
 		dealer = players.getActivePlayers().get(0).getID();
+		bank = new Bank(players);
 		while (!end) {
 			try {Thread.sleep(50);} catch (Exception e1) {e1.printStackTrace();}
-			bank = new Bank(players);
 			while (isRunning){
 				if (players.getSize() == 1){
-					System.out.println("winner is " + players.getAllPlayers().get(0));
-					return;
+					System.out.println("winner is " + players.getAllPlayers().get(0).getName() + players.getAllPlayers().get(0).getID());
+					end = true;
+					break;
+//					return;
 				}
 				rounds += 1;
 				viewEngine.setRounds(rounds);
@@ -155,6 +161,7 @@ public class GameEngine {
 					b.setScore(0);
 					b.nullStakes();
 				}
+				viewEngine.newRound(false);
 				checkChipsAllPls();
 				if (speed != 0) try {Thread.sleep(speed);} catch (Exception e) {}
 			}
@@ -169,14 +176,18 @@ public class GameEngine {
 	private void setDealer(){
 		dealer = players.getNext(dealer).getID();
 	}
-	
+
+	// TODO dokoncit blindy
 	private void setBlinds(){
-		if (rounds % 10 == 0){
+		Bot pl = players.getNextActivePlayer(dealer);
+		if (rounds % 15 == 0){
 			smallBlind *= 2;
 			bigBlind = smallBlind * 2;
+			System.out.println("bigBlind = " + bigBlind);
 		}
 		viewEngine.setTxtLog("Blinds are " + smallBlind + "/" + bigBlind);
-		players.getNextActivePlayer(dealer);
+//		bank.addChips(pl.payBlinds(smallBlind));
+//		bank.addChips(players.getNextActivePlayer(pl.getID()).payBlinds(bigBlind));
 //		System.out.println(smallBlind);
 	}
 	
@@ -216,16 +227,18 @@ public class GameEngine {
 			return;
 		}
 		gameState.setRound(i, deck);
-		botActions();
+		botActions(i);
 	}
 	
 	private boolean isEnoughPlayers(){
 		return players.getActivePlayers().size() > 1;
 	}
 	
-	private void botActions(){
+	private void botActions(int round){
 		double max = 0;
-		Bot b = players.getPlayer(dealer);
+		if (round == 0)
+			max = bigBlind;
+		Bot b = players.getPlayer(players.getNextActivePlayer(players.getNextActivePlayer(dealer).getID()).getID());
 		int ID = -1;
 		if (b.getState().equals(Value.state.folded))
 			b = players.getNextActivePlayer(b.getID());
@@ -234,7 +247,8 @@ public class GameEngine {
 			if (speed != 0) try {Thread.sleep(speed);} catch (Exception e) {}
 			if (ID == -1)
 				ID = b.getID();
-//			System.out.println(gameState);
+			gameState.setBank(bank.getChips());
+			System.out.println(gameState);
 			b.act(max, gameState);
 			if (!b.getState().equals(Value.state.folded)){
 				if (b.getRoundStake() > max){
@@ -262,7 +276,7 @@ public class GameEngine {
 			setNoneState(bot.getID());
 		}
 		deck = new Card[5];
-		viewEngine.newRound();
+		viewEngine.newRound(true);
 	}
 	
 	private void setPreflop(){
@@ -312,6 +326,7 @@ public class GameEngine {
 //					System.out.print(", " + cards[i]);
 //				System.out.println();
 		}
+		// add to log
 		for (Bot bot: players.getActivePlayers()){
 			if (bot.getScore() == max)
 				viewEngine.addStats(bot.getCard1(), bot.getCard2());

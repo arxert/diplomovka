@@ -105,8 +105,8 @@ public class ViewEngine extends JFrame {
 		statsPanel.statsCards(c1, c2);
 	}
 	
-	public void newRound(){
-		gamePanel.newRound();
+	public void newRound(boolean cards){
+		gamePanel.newRound(cards);
 	}
 	
 	public void setFlop(Card c1, Card c2, Card c3){
@@ -128,11 +128,16 @@ public class ViewEngine extends JFrame {
 	public void dealCard(int ID, Card c1, Card c2){
 		if (outputPanel != null)
 			outputPanel.dealedCard(ID, c1, c2);
-		gamePanel.dealedCards(ID, c1, c2);
+		gamePanel.dealedCards(ID);
 	}
 	
 	public void setTxtLog(String s){
+//		outputPanel.addToLog(s);
 		gamePanel.setTxtLog(s);
+	}
+	
+	public void plLeft(int ID){
+		gamePanel.plLeft(ID);
 	}
 
 	//****** player's actions *****//

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import bots.Bot;
 
-import utils.Value.state;
+import utils.Value.*;
 
 public class ListOfPlayers {
 
@@ -96,6 +96,7 @@ public class ListOfPlayers {
 	public void checkChipsAll(){
 		for (int i = players.size() - 1; i >= 0; i--){
 			if (players.get(i).getChips() <= 0){
+				players.get(i).end();
 				players.remove(i);
 				size -= 1;
 			}

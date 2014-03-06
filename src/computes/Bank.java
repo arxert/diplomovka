@@ -34,6 +34,7 @@ public class Bank {
 		double split = 0;
 		double temp = 0;
 		double min = 0;
+		int count = 0;
 		String result = "Bank = " + chips + ", winners: ";
 		ArrayList<Bot> winners = new ArrayList<>();
 		while (chips > 0){
@@ -58,6 +59,7 @@ public class Bank {
 //				try {Thread.sleep(2000);} catch (Exception e) {	e.printStackTrace();}
 //			}
 			Collections.sort(winners, Value.stakeComparator);
+			count = winners.size();
 			for (Bot b: winners){
 				min = b.getTotalStake();
 				for (Bot others: bots.getAllPlayers()){
@@ -67,15 +69,16 @@ public class Bank {
 //					System.out.println("others: " + others.getID() + ", temp = " + temp);
 				}
 				for (Bot win: winners){
-					if (win.getState() != state.folded){
-						win.winsChips(split / winners.size());
-						result += ", " + win.getName() + win.getID() + " - " + split / winners.size() + " (" + Value.hands.values()[((win.getScore() & 0xf00000) >> 0x14) - 6] + ")";
+					if (win.getState() != state.none){
+						win.winsChips(split / count);
+						result += ", " + win.getName() + win.getID() + " - " + split / count + " (" + Value.hands.values()[((win.getScore() & 0xf00000) >> 0x14) - 6] + ")";
 					}
 				}
 //				System.out.println("chips = " + chips + ", split = " + split);
+				count -= 1;
 				chips -= split;
 				split = 0;
-				b.setState(state.folded);
+				b.setState(state.none);
 			}
 		}
 		return result;

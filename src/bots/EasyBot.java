@@ -4,7 +4,6 @@ import game.State;
 
 import java.util.Random;
 
-
 public class EasyBot extends Bot {
 
 	private static String staticName = "Easy bot";
