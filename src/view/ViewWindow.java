@@ -173,4 +173,16 @@ public class ViewWindow extends JPanel {
 		setState(state.none);
 		setLblStatus(state.none.name());
 	}
+	
+	public void blind(double chips, boolean small){
+		if (small){
+			setState(state.smallBlind);
+			setLblStatus(state.smallBlind.name() + " " + chips);
+		}
+		else {
+			setState(state.bigBlind);
+			setLblStatus(state.bigBlind.name() + " " + chips);
+		}
+		setLblChips(bot.getChips());
+	}
 }

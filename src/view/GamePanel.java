@@ -185,6 +185,11 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
+	public void blind(int ID, double chips, boolean small){
+		if (canRun)
+			getPlayer(ID).blind(chips, small);
+	}
+	
 	public void noneState(int ID){
 		getPlayer(ID).noneState();
 	}

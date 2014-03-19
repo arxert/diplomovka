@@ -100,6 +100,10 @@ public abstract class Bot {
 		return this.score;
 	}
 	
+	public String getScoreToString(){
+		return Value.hands.values()[((score & 0xf00000) >> 0x14) - 6].name();
+	}
+	
 	public void winsChips(double chips){
 		this.chips += chips;
 	}
@@ -146,11 +150,10 @@ public abstract class Bot {
 	
 	// TODO check chips
 	private boolean chipsAreOK(double chips){
-		if (chips >= this.chips || this.chips - chips < 0){
-//			System.out.println("you dont have enough chips to do that act..");
-//			steps = 0;
-//			allIn();
-//			return false;
+		if (chips > this.chips){
+			allIn();
+			System.out.println("you dont have enough chips to do that act, you went all in");
+			return false;
 		}
 		return true;
 	}
@@ -210,7 +213,7 @@ public abstract class Bot {
 	}
 	
 	public void allIn(){
-		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+//		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 		if (!passed(chips))
 			return;
 		steps += 1;

@@ -151,8 +151,12 @@ public class GameEngine {
 				if (speed != 0) try { Thread.sleep(speed);} catch (Exception e) {e.printStackTrace(); }
 				viewEngine.newRound(false);
 				players.checkChipsAll();
-				System.out.println(gameState);
-				checkSumPls();
+//				System.out.println(gameState);
+//				if (checkSumPls() != 5 * initChips){
+//					System.out.println(gameState);
+//					System.out.println(checkSumPls());
+//					return;
+//				}
 				if (players.getSize() == 1){
 					System.out.println("winner is " + players.getAllPlayers().get(0).getName() + players.getAllPlayers().get(0).getID());
 					end = true;
@@ -164,12 +168,12 @@ public class GameEngine {
 		System.out.println("game ended");
 	}
 	
-	private void checkSumPls(){
+	private double checkSumPls(){
 		double res = 0;
 		for (Bot b: players.getAllPlayers()){
 			res += b.getChips();
 		}
-		System.out.println(res);
+		return res;
 	}
 	
 	private void setDealer(){
@@ -189,8 +193,15 @@ public class GameEngine {
 			System.out.println("bigBlind = " + bigBlind);
 		}
 		viewEngine.setTxtLog("Blinds are " + smallBlinds[actBlindIndex] + "/" + bigBlind);
-		bank.addChips(pl.payBlinds(smallBlinds[actBlindIndex]));
-		bank.addChips(players.getNextActivePlayer(pl.getID()).payBlinds(bigBlind));
+		double sb = pl.payBlinds(smallBlinds[actBlindIndex]);
+		bank.addChips(sb);
+		gameState.addAction(sb, pl.getID(), Value.state.smallBlind);
+		viewEngine.blind(pl.getID(), smallBlinds[actBlindIndex], true);
+		pl = players.getNextActivePlayer(pl.getID());
+		double bb = pl.payBlinds(bigBlind);
+		bank.addChips(bb);
+		gameState.addAction(bb, pl.getID(), Value.state.bigBlind);
+		viewEngine.blind(pl.getID(), bigBlind, false);
 	}
 	
 	private void dealCardsToAllPlayers(){
@@ -230,7 +241,11 @@ public class GameEngine {
 	
 	// TODO state
 	private void botActions(int round){
-		double max = round == 0 ? bigBlind : 0;
+		double max = 0;
+		if (round == 0){
+			setBlinds();
+			max = bigBlind;
+		}
 		Bot b = players.getNextActivePlayer(players.getNextActivePlayer(players.getNextActivePlayer(dealer).getID()).getID());
 		int ID = -1;
 		do {
@@ -253,6 +268,8 @@ public class GameEngine {
 				if (ID == b.getID())
 					ID = -1;
 			}
+			if (players.getActivePlayers().size() == 1)
+				return;
 			b = players.getNextActivePlayer(b.getID());
 		} while (ID != b.getID());
 	}
@@ -276,7 +293,6 @@ public class GameEngine {
 	}
 	
 	private void setPreflop(){
-		setBlinds();
 		dealCardsToAllPlayers();
 	}
 	

@@ -74,7 +74,7 @@ public class State {
 	
 	public void setRound(int round, Card[] cards){
 		this.round = round;
-		rounds.add(new Round(round));
+		this.rounds.add(new Round(round));
 		this.cards = cards;
 	}
 	

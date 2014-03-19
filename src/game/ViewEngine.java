@@ -175,4 +175,10 @@ public class ViewEngine extends JFrame {
 			outputPanel.allIn(ID, chips);
 		gamePanel.allIn(ID, chips);
 	}
+	
+	public void blind(int ID, double chips, boolean small){
+		if (outputPanel != null)
+			outputPanel.blind(ID, chips, small);
+		gamePanel.blind(ID, chips, small);
+	}
 }

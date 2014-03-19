@@ -168,4 +168,13 @@ public class OutputPanel extends JPanel {
 		if (canRun)
 			addLog("player " + ID + " is all in (" + chips + ").");
 	}
+	
+	public void blind(int ID, double chips, boolean small){
+		if (canRun)
+			if (small)
+				addLog("player " + ID + " is small blind (" + chips + ").");
+			else
+				addLog("player " + ID + " is big blind (" + chips + ").");
+				
+	}
 }
