@@ -35,8 +35,8 @@ public abstract class Bot {
 		steps = 0;
 		if (chips == 0){
 			
-		}
-		doAct(max, state);
+		} else
+			doAct(max, state);
 	}
 	
 	public String getName(){
@@ -127,20 +127,16 @@ public abstract class Bot {
 	
 	public double payBlinds(int blind){
 		if (chips > blind){
-			totalStake += blind;
-			roundStake += blind;
-			chips -= blind;
+			update(blind);
 			return blind;
 		} else {
 			setState(Value.state.allIn);
-			totalStake = chips;
-			roundStake = chips;
-			chips = 0;
+			update(chips);
 			return totalStake;
 		}
 	}
 	
-	private boolean checkSteps(){
+	private boolean stepsAreOK(){
 		if (steps != 0){
 			System.out.println("only one action is allowed");
 			return false;
@@ -148,8 +144,9 @@ public abstract class Bot {
 		return true;
 	}
 	
-	private boolean checkChips(double chips){
-		if (chips > this.chips){
+	// TODO check chips
+	private boolean chipsAreOK(double chips){
+		if (chips >= this.chips || this.chips - chips < 0){
 //			System.out.println("you dont have enough chips to do that act..");
 //			steps = 0;
 //			allIn();
@@ -165,10 +162,20 @@ public abstract class Bot {
 		engine.plLeft(ID);
 	}
 	
+	private void update(double chips){
+		this.chips -= chips;
+		totalStake += chips;
+		roundStake += chips;
+	}
+	
+	private boolean passed(double chips){
+		return stepsAreOK() && chipsAreOK(chips);
+	}
+	
 	//****** player's actions *****//
 	
 	public void check(){
-		if (!checkSteps())
+		if (!passed(chips))
 			return;
 		steps += 1;
 		setState(Value.state.checked);
@@ -176,48 +183,40 @@ public abstract class Bot {
 	}
 
 	public void call(double chips){
-		if (!checkSteps())
-			return;
-		if (!checkChips(chips))
+		if (!passed(chips))
 			return;
 		steps += 1;
-		this.chips -= chips; 
-		totalStake += chips;
-		roundStake += chips;
+		update(chips);
 		setState(Value.state.called);
 		engine.call(ID, chips);
 	}
 	
 	public void raise(double chips){
-		if (!checkSteps())
-			return;
-		if (!checkChips(chips))
+		if (!passed(chips))
 			return;
 		steps += 1;
-		this.chips -= chips; 
-		totalStake += chips;
-		roundStake += chips;
+		update(chips);
 		setState(Value.state.raised);
 		engine.raise(ID, chips);
 	}
 	
 	public void fold(){
-		if (!checkSteps())
+		if (!passed(chips))
 			return;
 		steps += 1;
-		roundStake = 0;
+		update(0);
 		setState(Value.state.folded);
 		engine.fold(ID);
 	}
 	
 	public void allIn(){
-		if (!checkSteps())
+		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+		if (!passed(chips))
 			return;
 		steps += 1;
-		totalStake += chips;
-		roundStake += chips;
-		chips = 0;
+		double temp = chips;
+		update(chips);
 		setState(Value.state.allIn);
-		engine.allIn(ID, chips);
+		engine.allIn(ID, temp);
 	}
 }

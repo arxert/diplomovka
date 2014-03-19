@@ -7,8 +7,10 @@ import utils.Value.value;
 import java.util.Collections;
 import java.util.LinkedList;
 
+@SuppressWarnings("unchecked")
 public class Talon {
 
+	private LinkedList<Card> allCards = new LinkedList<>();
 	private LinkedList<Card> cards = new LinkedList<>();
 	private static Card emptyCard = new Card(null, null);
 	
@@ -17,20 +19,10 @@ public class Talon {
 		shuffle();
 	}
 	
-//	public void trashCard(Card c){
-//		if (cards.contains(c))
-//			System.out.println("this card is already in talon");
-//		else
-//			cards.push(c);
-//	}
-	
 	public Card getNextCard(){
 		Card c = cards.poll();
-		cards.add(c);
+//		cards.add(c);
 		return c;
-//		if (cards.isEmpty())
-//			return null;
-//		return cards.poll();
 	}
 	
 	public static Card getEmptyCard(){
@@ -38,15 +30,26 @@ public class Talon {
 	}
 	
 	public void shuffle(){
+		cards = (LinkedList<Card>) allCards.clone();
 		Collections.shuffle(cards);
 	}
 	
 	private void createAllCards(){
-		cards.clear();
+		allCards.clear();
 		for (suit s: Value.suit.values()){
 			for (value v: Value.value.values()){
-				cards.push(new Card(v, s));
+				allCards.push(new Card(v, s));
 			}
 		}
+		cards = (LinkedList<Card>) allCards.clone();
+	}
+	
+	public void removeCard(Card c){
+		cards.remove(c);
+	}
+	
+	public Talon getCopyOfTalon(){
+		Talon t = new Talon();
+		return t;
 	}
 }

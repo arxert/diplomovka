@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import bots.Bot;
 
+import utils.ListOfPlayers;
 import utils.Value.*;
 
 public class State {
@@ -58,11 +59,13 @@ public class State {
 		}
 	}
 	
-	public State(int dealerID, int smallBlind){
+	public State(int dealerID, int smallBlind, ListOfPlayers pls){
 		this.round = 0;
 		this.smallBlind = smallBlind;
 		this.bigBlind = smallBlind * 2;
 		this.dealerID = dealerID;
+		for (Bot b: pls.getActivePlayers())
+			players.add(new Player(b.getID(), b.getChips(), b.getTotalStake()));
 	}
 	
 	public void setBank(double bank){
@@ -73,10 +76,6 @@ public class State {
 		this.round = round;
 		rounds.add(new Round(round));
 		this.cards = cards;
-	}
-	
-	public void addPlayer(Bot bot){
-		players.add(new Player(bot.getID(), bot.getChips(), bot.getTotalStake()));
 	}
 	
 	public void addAction(double amount, int botID, state state){

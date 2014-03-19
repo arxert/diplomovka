@@ -13,13 +13,11 @@ import utils.Value.state;
 public class Bank {
 
 	private ListOfPlayers bots;
-//	private ArrayList<SubBank> subBanks = new ArrayList<>();
 	private double chips = 0;
 	private double maxScore = 0;
 	
 	public Bank(ListOfPlayers bots){
 		this.bots = bots;
-//		subBanks.add(new SubBank(0));
 	}
 	
 	public void addChips(double chips){
@@ -30,6 +28,7 @@ public class Bank {
 		return chips;
 	}
 	
+	// TODO change completely
 	public String splitAll(){
 		double split = 0;
 		double temp = 0;
@@ -38,11 +37,13 @@ public class Bank {
 		String result = "Bank = " + chips + ", winners: ";
 		ArrayList<Bot> winners = new ArrayList<>();
 		while (chips > 0){
+//			System.out.println(chips);
 			maxScore = 0;
 			split = 0;
 			temp = 0;
 			winners.clear();
 			for (Bot bot: bots.getActivePlayers()){
+//				System.out.println(bot.getID() + ", " + bot.getTotalStake());
 				if (bot.getScore() > maxScore){
 					maxScore = bot.getScore();
 					winners.clear();
@@ -80,8 +81,18 @@ public class Bank {
 				split = 0;
 				b.setState(state.none);
 			}
+//			checkSumPls();
 		}
 		return result;
+	}
+	
+
+	private void checkSumPls(){
+		double res = 0;
+		for (Bot b: bots.getAllPlayers()){
+			res += b.getChips();
+		}
+		System.out.println(res);
 	}
 	
 	
