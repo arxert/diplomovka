@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import bots.Person;
 
 import utils.*;
+import utils.Value.state;
 
 public class GamePanel extends JPanel {
 
@@ -150,50 +151,6 @@ public class GamePanel extends JPanel {
 			getPlayer(ID).updateCards();
 	}
 	
-	public void check(int ID){
-		if (canRun){
-//			setStatus(ID, state.checked);
-			getPlayer(ID).check();
-		}
-	}
-	
-	public void fold(int ID){
-		if (canRun){
-//			setStatus(ID, state.folded);
-			getPlayer(ID).fold();
-		}
-	}
-	
-	public void raise(int ID, double chips){
-		if (canRun){
-//			setStatus(ID, state.raised);
-			getPlayer(ID).raise(chips);
-		}
-	}
-	
-	public void call(int ID, double chips){
-		if (canRun){
-//			setStatus(ID, state.called);
-			getPlayer(ID).call(chips);
-		}
-	}
-	
-	public void allIn(int ID, double chips){
-		if (canRun){
-//			setStatus(ID, state.allIn);
-			getPlayer(ID).allIn();
-		}
-	}
-	
-	public void blind(int ID, double chips, boolean small){
-		if (canRun)
-			getPlayer(ID).blind(chips, small);
-	}
-	
-	public void noneState(int ID){
-		getPlayer(ID).noneState();
-	}
-	
 	public void setTxtLog(String s){
 		txtLog.setText("Bank: " + s);
 	}
@@ -202,7 +159,8 @@ public class GamePanel extends JPanel {
 		getPlayer(ID).left();
 	}
 	
-//	private void setStatus(int ID, state state){
-//		getPlayer(ID).setState(state);
-//	}
+	public void setAction(int ID, state state, double chips){
+		if (canRun)
+			getPlayer(ID).setAction(state, chips);
+	}
 }

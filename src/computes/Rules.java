@@ -42,30 +42,6 @@ public class Rules {
 		return getHand(cards);
 	}
 
-//	private static int getHand(Card[] cards){
-//		if (isRoyalFlush(cards))
-//			return hands.royalFlush.ordinal();
-//		if (isStraightFlush(cards))
-//			return hands.straightFlush.ordinal();
-//		if (isFourOfAKind(cards))
-//			return hands.fourOfAKind.ordinal();
-//		if (isFullHouse(cards))
-//			return hands.fullHouse.ordinal();
-//		if (isFlush(cards))
-//			return hands.flush.ordinal();
-//		if (isStraight(cards))
-//			return hands.straight.ordinal();
-//		if (isTriple(cards))
-//			return hands.triple.ordinal();
-//		if (isTwoPair(cards))
-//			return hands.twoPair.ordinal();
-//		if (isOnePair(cards))
-//			return hands.onePair.ordinal();
-//		if (isHighCard(cards))
-//			return hands.highCard.ordinal();
-//		return 0;
-//	}
-	
 	private static int getHand(Card[] cards){
 		int res;
 		if ((res = isRoyalFlush(cards)) != 0)

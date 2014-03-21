@@ -1,6 +1,5 @@
 package game;
 
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -10,7 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import utils.ListOfPlayers;
-import view.GameControlPanel;
+import utils.ViewControlPanel;
+import utils.Value.state;
 import view.OutputPanel;
 import view.GamePanel;
 import view.StatisticsPanel;
@@ -30,7 +30,7 @@ public class ViewEngine extends JFrame {
 	private GamePanel gamePanel;
 	private OutputPanel outputPanel;
 	private StatisticsPanel statsPanel;
-	private GameControlPanel gameControlPanel;
+	private ViewControlPanel gameControlPanel;
 
 	public ViewEngine(GameEngine gE, ListOfPlayers players){
 		this.gameEngine = gE;
@@ -40,10 +40,10 @@ public class ViewEngine extends JFrame {
 	}
 	
 	private void initComponents(ListOfPlayers pls){
-		gameControlPanel = new GameControlPanel(this);
+		gameControlPanel = new ViewControlPanel(this);
 		gamePanel = new GamePanel(gameEngine, pls);
-		outputPanel = new OutputPanel(pls);
-		statsPanel = new StatisticsPanel(pls);
+		outputPanel = new OutputPanel();
+		statsPanel = new StatisticsPanel();
 		tbPane.setPreferredSize(new Dimension(tabWidth, tabHeight));
 		addWindowListener(new java.awt.event.WindowAdapter() {
 	        public void windowClosing(WindowEvent winEvt) {
@@ -57,6 +57,7 @@ public class ViewEngine extends JFrame {
 		tbPane.addTab("Game", gamePanel);
 		tbPane.addTab("Console", outputPanel);
 		tbPane.addTab("Statistics", statsPanel);
+		
 		add(tbPane, BorderLayout.CENTER);
 		add(gameControlPanel, BorderLayout.NORTH);
 		pack();
@@ -87,6 +88,10 @@ public class ViewEngine extends JFrame {
 	
 	public void setOutputViewVisible(boolean yes){
 		outputPanel.canRun(yes);
+	}
+	
+	public void setStatsViewVisible(boolean yes){
+		statsPanel.canRun(yes);
 	}
 	
 	public void setRounds(int i){
@@ -121,13 +126,8 @@ public class ViewEngine extends JFrame {
 		gamePanel.setRiver(c);
 	}
 	
-//	public void setState(int ID, Value.state state){
-//		gamePanel.setState(ID, state);
-//	}
-
 	public void dealCard(int ID, Card c1, Card c2){
-		if (outputPanel != null)
-			outputPanel.dealedCard(ID, c1, c2);
+		outputPanel.dealedCard(ID, c1, c2);
 		gamePanel.dealedCards(ID);
 	}
 	
@@ -142,43 +142,8 @@ public class ViewEngine extends JFrame {
 
 	//****** player's actions *****//
 	
-	public void setNoneState(int ID){
-		gamePanel.noneState(ID);
-	}
-	
-	public void fold(int ID){
-		if (outputPanel != null)
-			outputPanel.fold(ID);
-		gamePanel.fold(ID);
-	}
-	
-	public void check(int ID){
-		if (outputPanel != null)
-			outputPanel.check(ID);
-		gamePanel.check(ID);
-	}
-	
-	public void raise(int ID, double chips){
-		if (outputPanel != null)
-			outputPanel.raise(ID, chips);
-		gamePanel.raise(ID, chips);
-	}
-	
-	public void call(int ID, double chips){
-		if (outputPanel != null)
-			outputPanel.call(ID, chips);
-		gamePanel.call(ID, chips);
-	}
-	
-	public void allIn(int ID, double chips){
-		if (outputPanel != null)
-			outputPanel.allIn(ID, chips);
-		gamePanel.allIn(ID, chips);
-	}
-	
-	public void blind(int ID, double chips, boolean small){
-		if (outputPanel != null)
-			outputPanel.blind(ID, chips, small);
-		gamePanel.blind(ID, chips, small);
+	public void setAction(int ID, state state, double chips){
+		outputPanel.setAction(ID, state, chips);
+		gamePanel.setAction(ID, state, chips);
 	}
 }

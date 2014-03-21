@@ -9,6 +9,7 @@ import computes.Rules;
 
 import utils.ListOfPlayers;
 import utils.Value;
+import utils.Value.state;
 
 public class GameEngine {
 	
@@ -25,7 +26,7 @@ public class GameEngine {
 	
 	private Card[] deck = new Card[5];
 	
-	private double initChips = 10000;
+	private double initChips = 50000;
 	
 	private Bank bank;
 	
@@ -38,7 +39,7 @@ public class GameEngine {
 //	private int smallBlind = 10, bigBlind = smallBlind * 2;
 
 	private int actBlindIndex = 0;
-	private int smallBlinds[] = {25, 50, 100, 250, 500, 1000, 1500, 2000, 4000, 8000};
+	private int smallBlinds[] = {25, 50, 100, 250, 500, 1000, 1500, 2000, 5000, 10000, 15000, 25000, 50000};
 	private int bigBlind = smallBlinds[actBlindIndex] * 2;
 	
 	public GameEngine(String[] pls){
@@ -60,7 +61,7 @@ public class GameEngine {
 	
 	private void setNoneState(int ID){
 		players.getPlayer(ID).setState(Value.state.none);
-		viewEngine.setNoneState(ID);
+		viewEngine.setAction(ID, state.none, 0);
 	}
 	
 	public int getRounds(){
@@ -74,34 +75,34 @@ public class GameEngine {
 	/****** player's actions *****/
 	
 	public void fold(int ID){
-		viewEngine.fold(ID);
+		viewEngine.setAction(ID, state.folded, 0);
 		viewEngine.setTxtLog("" + bank.getChips());
 		gameState.addAction(0, ID, Value.state.folded);
 	}
 	
 	public void check(int ID){
-		viewEngine.check(ID);
+		viewEngine.setAction(ID, state.checked, 0);
 		viewEngine.setTxtLog("" + bank.getChips());
 		gameState.addAction(0, ID, Value.state.checked);
 	}
 	
 	public void call(int ID, double chips){
 		bank.addChips(chips);
-		viewEngine.call(ID, chips);
+		viewEngine.setAction(ID, state.called, chips);
 		viewEngine.setTxtLog("" + bank.getChips());
 		gameState.addAction(chips, ID, Value.state.called);
 	}
 	
 	public void raise(int ID, double chips){
 		bank.addChips(chips);
-		viewEngine.raise(ID, chips);
+		viewEngine.setAction(ID, state.raised, chips);
 		viewEngine.setTxtLog("" + bank.getChips());
 		gameState.addAction(chips, ID, Value.state.raised);
 	}
 
 	public void allIn(int ID, double chips){
 		bank.addChips(chips);
-		viewEngine.allIn(ID, chips);
+		viewEngine.setAction(ID, state.allIn, chips);
 		viewEngine.setTxtLog("" + bank.getChips());
 		gameState.addAction(chips, ID, Value.state.allIn);
 	}
@@ -146,7 +147,6 @@ public class GameEngine {
 				setDealer();
 //				setBlinds();
 				gameState = new State(dealer, smallBlinds[actBlindIndex], players);
-//				gameState = new State(dealer, smallBlind, players);
 				playRounds();
 				if (speed != 0) try { Thread.sleep(speed);} catch (Exception e) {e.printStackTrace(); }
 				viewEngine.newRound(false);
@@ -180,28 +180,26 @@ public class GameEngine {
 		dealer = players.getNext(dealer).getID();
 	}
 
-	// TODO dokoncit blindy
 	private void setBlinds(){
 		Bot pl = players.getNextActivePlayer(dealer);
-//		System.out.println("dealer = " + dealer);
-//		System.out.println("next = " + players.getNextActivePlayer(dealer).getID());
-//		System.out.println("next next = " + players.getNextActivePlayer(players.getNextActivePlayer(dealer).getID()).getID());
+		double sb, bb;
 		if (rounds % 150 == 0){
 			actBlindIndex += 1;
-//			smallBlind *= 2;
 			bigBlind = smallBlinds[actBlindIndex] * 2;
 			System.out.println("bigBlind = " + bigBlind);
 		}
 		viewEngine.setTxtLog("Blinds are " + smallBlinds[actBlindIndex] + "/" + bigBlind);
-		double sb = pl.payBlinds(smallBlinds[actBlindIndex]);
+		
+		sb = pl.payBlinds(smallBlinds[actBlindIndex]);
 		bank.addChips(sb);
 		gameState.addAction(sb, pl.getID(), Value.state.smallBlind);
-		viewEngine.blind(pl.getID(), smallBlinds[actBlindIndex], true);
+		viewEngine.setAction(pl.getID(), state.smallBlind, smallBlinds[actBlindIndex]);
+		
 		pl = players.getNextActivePlayer(pl.getID());
-		double bb = pl.payBlinds(bigBlind);
+		bb = pl.payBlinds(bigBlind);
 		bank.addChips(bb);
 		gameState.addAction(bb, pl.getID(), Value.state.bigBlind);
-		viewEngine.blind(pl.getID(), bigBlind, false);
+		viewEngine.setAction(pl.getID(), state.bigBlind, bigBlind);
 	}
 	
 	private void dealCardsToAllPlayers(){
