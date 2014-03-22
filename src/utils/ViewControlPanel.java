@@ -1,4 +1,4 @@
-package view;
+package utils;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,7 +14,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GameControlPanel extends JPanel {
+public class ViewControlPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -23,28 +23,27 @@ public class GameControlPanel extends JPanel {
 	private JButton btnStop = new JButton("Stop");
 	private JButton btnStart = new JButton("Start");
 
+	private JCheckBox chckSpeed = new JCheckBox("fast game");
 	private JCheckBox chckGameView = new JCheckBox("view");
 	private JCheckBox chckOutputView = new JCheckBox("output");
-	private JCheckBox chckSpeed = new JCheckBox("fast game");
+	private JCheckBox chckStats = new JCheckBox("stats");
 	
-	private JLabel rounds = new JLabel("rounds: 0");
+	private JLabel rounds = new JLabel("games: 0");
 	
+	private Dimension compDim = new Dimension(100, 30);
 	
-	private Dimension compDim = new Dimension(120, 30);
-	
-	public GameControlPanel(ViewEngine ve) {
+	public ViewControlPanel(ViewEngine ve) {
 		this.viewEngine = ve;
 		init();
 		initComps();
 		addComps();
 	}
-	
-	public void setRound(int i){
-		rounds.setText("rounds: " + i);
+
+	private void init(){
+		setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
 	}
 	
 	private void initComps(){
-		
 		btnStop.setPreferredSize(compDim);
 		btnStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -67,7 +66,6 @@ public class GameControlPanel extends JPanel {
 		});
 
 		chckOutputView.setSelected(true);
-		chckOutputView.setSelected(true);
 		chckOutputView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				viewEngine.setOutputViewVisible(chckOutputView.isSelected());
@@ -83,6 +81,13 @@ public class GameControlPanel extends JPanel {
 					viewEngine.setSpeed(1500);
 			}
 		});
+		
+		chckStats.setSelected(true);
+		chckStats.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewEngine.setStatsViewVisible(chckStats.isSelected());
+			}
+		});
 	}
 	
 	private void addComps(){
@@ -92,10 +97,11 @@ public class GameControlPanel extends JPanel {
 		add(chckSpeed);
 		add(chckGameView);	
 		add(chckOutputView);
+		add(chckStats);
 		setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Color.BLACK));
 	}
-	
-	private void init(){
-		setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+
+	public void setRound(int i){
+		rounds.setText("games: " + i);
 	}
 }
