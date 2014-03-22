@@ -97,12 +97,17 @@ public class ViewWindow extends JPanel {
 		add(pnlLeft, BorderLayout.WEST);
 	}
 	
+//	public void updateCards(Card c1, Card c2){
+//		this.c1.setIcon(c1.getIcon());
+//		this.c2.setIcon(c2.getIcon());
+//	}
+	
 	public void updateCards(){
 		c1.setIcon(bot.getCard1().getIcon());
 		c2.setIcon(bot.getCard2().getIcon());
 	}
-	
-	private void setState(state state){
+
+	private void setState(Value.state state){
 		isOnMove(false);
 		if (state.equals(Value.state.folded)){
 			setOpaque(false);
@@ -136,10 +141,48 @@ public class ViewWindow extends JPanel {
 	}
 	
 	//****** player's actions *****//
-
-	public void setAction(state state, double chips){
+	
+	public void raise(double chips){
 		setLblChips(bot.getChips());
-		setLblStatus(state.name() + " " + chips);
-		setState(state);
+		setLblStatus(state.raised.name() + " " + chips);
+		setState(state.raised);
+	}
+	
+	public void call(double chips){
+		setLblChips(bot.getChips());
+		setLblStatus(state.called.name() + " " + chips);
+		setState(state.called);
+	}
+	
+	public void check(){
+		setState(state.checked);
+		setLblStatus(state.checked.name());
+	}
+	
+	public void fold(){
+		setState(state.folded);
+		setLblStatus(state.folded.name());
+	}
+	
+	public void allIn(){
+		setState(state.allIn);
+		setLblStatus(state.allIn.name());
+	}
+	
+	public void noneState(){
+		setState(state.none);
+		setLblStatus(state.none.name());
+	}
+	
+	public void blind(double chips, boolean small){
+		if (small){
+			setState(state.smallBlind);
+			setLblStatus(state.smallBlind.name() + " " + chips);
+		}
+		else {
+			setState(state.bigBlind);
+			setLblStatus(state.bigBlind.name() + " " + chips);
+		}
+		setLblChips(bot.getChips());
 	}
 }

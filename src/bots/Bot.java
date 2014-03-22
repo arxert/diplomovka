@@ -152,7 +152,7 @@ public abstract class Bot {
 	private boolean chipsAreOK(double chips){
 		if (chips > this.chips){
 			allIn();
-			System.out.println(ID + ": you dont have enough chips to do that act, you went all in");
+			System.out.println("you dont have enough chips to do that act, you went all in");
 			return false;
 		}
 		return true;
