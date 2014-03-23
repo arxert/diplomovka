@@ -67,10 +67,6 @@ public abstract class Bot {
 	public double getChips(){
 		return chips;
 	}
-
-//	public void setChips(double chips){
-//		this.chips = chips;
-//	}
 	
 	public void setState(Value.state state){
 		this.state = state;
@@ -148,7 +144,6 @@ public abstract class Bot {
 		return true;
 	}
 	
-	// TODO check chips
 	private boolean chipsAreOK(double chips){
 		if (chips > this.chips){
 			allIn();

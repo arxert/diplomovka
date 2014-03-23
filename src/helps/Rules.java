@@ -1,4 +1,4 @@
-package computes;
+package helps;
 
 import game.Card;
 
@@ -231,7 +231,6 @@ public class Rules {
 					break;
 				if (bucket[i]){
 					count -= 1;
-//					res |= i * (int) Math.pow(16, count);
 					res |= (i << (count*4));
 				}
 			}

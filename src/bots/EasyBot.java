@@ -20,22 +20,23 @@ public class EasyBot extends Bot {
 	@Override
 	public void doAct(double max, State state) {
 		max -= roundStake;
-		if (max == 0){
-			Random r = new Random();
-			if (r.nextBoolean())
-				check();
-			else
-				raise(20);
-		} else {
-			Random r = new Random();
-			if (r.nextInt(10) < 8)
-				call(max);
-			else
-				if (r.nextInt(10) < 7)
-					raise(max + 10);
-				else
-					fold();
-		}
+//		if (max == 0){
+//			Random r = new Random();
+//			if (r.nextBoolean())
+//				check();
+//			else
+//				raise(20);
+//		} else {
+//			Random r = new Random();
+//			if (r.nextInt(10) < 8)
+//				call(max);
+//			else
+//				if (r.nextInt(10) < 7)
+//					raise(max + 10);
+//				else
+//					fold();
+//		}
+		call(max);
 //		check();
 	}
 }

@@ -120,13 +120,10 @@ public abstract class TXTPanel extends JPanel {
 			if (writeToFile){
 				try {
 					fileWriter.write(s + "\n");
-//					System.out.println(file.getCanonicalPath());
-//					System.out.println("writing to file: " + s);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else {
-//				System.out.println("writing to console");
 				txtGame.append(s + "\n");
 				txtGame.setCaretPosition(txtGame.getDocument().getLength());
 			}

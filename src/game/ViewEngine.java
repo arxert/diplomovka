@@ -48,6 +48,7 @@ public class ViewEngine extends JFrame {
 		addWindowListener(new java.awt.event.WindowAdapter() {
 	        public void windowClosing(WindowEvent winEvt) {
 	        	outputPanel.end();
+	        	statsPanel.end();
 	        	gameEngine.endGame();
 	        }
 	    });

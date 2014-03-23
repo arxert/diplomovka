@@ -5,33 +5,42 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import utils.Value;
+import utils.Value.*;
 
-public class Card {
+public class Card implements Serializable {
 	
-	private Value.value value;
-	private Value.suit suit;
+	private static final long serialVersionUID = 1L;
+	
+	private value value;
+	private suit suit;
 	private ImageIcon icon;
+	private int hash;
 	
-	public Card(Value.value value, Value.suit suit){
+	public Card(value value, suit suit){
 		if (value == null){
 			setIcon("empty.png");
 			return;
 		}
 		this.value = value;
 		this.suit = suit;
+		createHash();
 		setIcon();
 	}
 
-	public Value.value getValue(){
+	private void createHash(){
+		this.hash = suit.ordinal() * utils.Value.value.values().length + value.ordinal();
+	}
+	
+	public value getValue(){
 		return this.value;
 	}
 
-	public Value.suit getSuit(){
+	public suit getSuit(){
 		return this.suit;
 	}
 	
@@ -69,6 +78,10 @@ public class Card {
 
 	private void setIcon(String path){
 		icon = new ImageIcon("img/" + path);
+	}
+	
+	public int getHash(){
+		return this.hash;
 	}
 	
 	public String toString(){

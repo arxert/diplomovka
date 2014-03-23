@@ -1,6 +1,6 @@
 package game;
 
-import computes.Rules;
+import helps.Rules;
 
 import utils.Value;
 import utils.Value.suit;

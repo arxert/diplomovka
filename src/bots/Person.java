@@ -6,11 +6,8 @@ import view.PlayerWindow;
 public class Person extends Bot {
 
 	private static String staticName = "Player";
-	
 	private boolean run = true;
-	
 	private PlayerWindow window;
-	
 	private double max = 0;
 	
 	public Person(int id, double chips) {

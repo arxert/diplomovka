@@ -12,8 +12,6 @@ public class StatisticsPanel extends TXTPanel {
 	}
 	
 	public void statsCards(Card c1, Card c2){
-//		addLog("" + c1 + " " + c2);
-		addLog("player " + 5 + " was dealed cards " + c1 + ", " + c2);
-		System.out.println(c1);
+		addLog(c1 + " " + c2);
 	}
 }
