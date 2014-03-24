@@ -3,7 +3,6 @@ package bots;
 import game.Card;
 import game.GameEngine;
 import game.State;
-import game.Talon;
 import utils.Value;
 
 public abstract class Bot {
@@ -108,7 +107,8 @@ public abstract class Bot {
 		return this.totalStake;
 	}
 	
-	public void nullStakes(){
+	public void nullEverything(){
+		score = 0;
 		totalStake = 0;
 		roundStake = 0;
 	}
@@ -125,7 +125,7 @@ public abstract class Bot {
 		roundStake = 0;
 	}
 	
-	public double payBlinds(int blind){
+	public double payBlinds(double blind){
 		if (chips > blind){
 			update(blind);
 			return blind;
@@ -154,8 +154,8 @@ public abstract class Bot {
 	}
 
 	public void end(){
-		c1 = Talon.getEmptyCard();
-		c2 = Talon.getEmptyCard();
+		c1 = Value.emptyCard;
+		c2 = Value.emptyCard;
 		setState(Value.state.left);
 		engine.plLeft(ID);
 	}
@@ -172,49 +172,33 @@ public abstract class Bot {
 	
 	//****** player's actions *****//
 	
-	public void check(){
+	private void setAction(Value.state state, double chips) {
 		if (!passed(chips))
 			return;
 		steps += 1;
-		setState(Value.state.checked);
-		engine.check(ID);
+		update(chips);
+		setState(state);
+		engine.setAction(ID, state, chips);
+	}
+	
+	public void check(){
+		setAction(Value.state.checked, 0);
 	}
 
 	public void call(double chips){
-		if (!passed(chips))
-			return;
-		steps += 1;
-		update(chips);
-		setState(Value.state.called);
-		engine.call(ID, chips);
+		setAction(Value.state.called, chips);
 	}
 	
 	public void raise(double chips){
-		if (!passed(chips))
-			return;
-		steps += 1;
-		update(chips);
-		setState(Value.state.raised);
-		engine.raise(ID, chips);
+		setAction(Value.state.raised, chips);
 	}
 	
 	public void fold(){
-		if (!passed(chips))
-			return;
-		steps += 1;
-		update(0);
-		setState(Value.state.folded);
-		engine.fold(ID);
+		setAction(Value.state.folded, 0);
 	}
 	
 	public void allIn(){
 //		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-		if (!passed(chips))
-			return;
-		steps += 1;
-		double temp = chips;
-		update(chips);
-		setState(Value.state.allIn);
-		engine.allIn(ID, temp);
+		setAction(Value.state.allIn, chips);
 	}
 }

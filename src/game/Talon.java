@@ -1,18 +1,15 @@
 package game;
 
-import utils.Value;
-import utils.Value.suit;
-import utils.Value.value;
-
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 
-@SuppressWarnings("unchecked")
+import utils.CardGenerator;
+
 public class Talon {
 
-	private LinkedList<Card> allCards = new LinkedList<>();
-	private LinkedList<Card> cards = new LinkedList<>();
-	private static Card emptyCard = new Card(null, null);
+	private ArrayList<Card> cards = new ArrayList<>();
+	private static CardGenerator cGen = new CardGenerator();
+	private int index = 0, size = 0;
 	
 	public Talon(){
 		createAllCards();
@@ -20,36 +17,17 @@ public class Talon {
 	}
 	
 	public Card getNextCard(){
-		Card c = cards.poll();
-//		cards.add(c);
-		return c;
-	}
-	
-	public static Card getEmptyCard(){
-		return emptyCard;
+		index = (index + 1) % size;
+		return cards.get(index);
 	}
 	
 	public void shuffle(){
-		cards = (LinkedList<Card>) allCards.clone();
+		index = 0;
 		Collections.shuffle(cards);
 	}
 	
 	private void createAllCards(){
-		allCards.clear();
-		for (suit s: Value.suit.values()){
-			for (value v: Value.value.values()){
-				allCards.push(new Card(v, s));
-			}
-		}
-		cards = (LinkedList<Card>) allCards.clone();
-	}
-	
-	public void removeCard(Card c){
-		cards.remove(c);
-	}
-	
-	public Talon getCopyOfTalon(){
-		Talon t = new Talon();
-		return t;
+		cards = cGen.getCards();
+		size = cards.size();
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -43,13 +44,18 @@ public abstract class TXTPanel extends JPanel {
 		addComponents();
 	}
 	
-	public void end(){
+	private void closeFile(){
 		try {
 			if (writeToFile)
 				fileWriter.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void end(){
+		closeFile();
 	}
 	
 	public void canRun(boolean yes){
@@ -120,8 +126,10 @@ public abstract class TXTPanel extends JPanel {
 			if (writeToFile){
 				try {
 					fileWriter.write(s + "\n");
-				} catch (Exception e) {
+				} catch (IOException e) {
+					writeToFile = false;
 					e.printStackTrace();
+					System.out.println("Dont worry, everything was saved..");
 				}
 			} else {
 				txtGame.append(s + "\n");

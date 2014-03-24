@@ -1,6 +1,6 @@
 package game;
 
-import helps.Rules;
+import helps.Ranks;
 
 import utils.Value;
 import utils.Value.suit;
@@ -32,7 +32,7 @@ public class HandGenerator {
 					cards[i] = new Card(Value.value.values()[k], s);
 					i += 1;
 				}
-				if ((((Rules.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.straight.ordinal()){
+				if ((((Ranks.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.straight.ordinal()){
 					errors += 1;
 //					System.out.print("wrong eval");
 //					for (int j = 0; j < cards.length; j++)
@@ -57,7 +57,7 @@ public class HandGenerator {
 						cards[3] = new Card(Value.value.values()[i3], suit.CLUBS);
 						for (int i4 = i3 + 1; i4 < Value.value.values().length; i4++){
 							cards[4] = new Card(Value.value.values()[i4], suit.CLUBS);
-							if ((((Rules.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.flush.ordinal()){
+							if ((((Ranks.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.flush.ordinal()){
 								errors += 1;
 //								System.out.print("wrong eval");
 //								for (int j = 0; j < cards.length; j++)
@@ -84,7 +84,7 @@ public class HandGenerator {
 					cards[i] = new Card(v2, suit.CLUBS);
 				}
 
-				if ((((Rules.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.fullHouse.ordinal()){
+				if ((((Ranks.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.fullHouse.ordinal()){
 					errors += 1;
 //					System.out.print("wrong eval");
 //					for (int j = 0; j < cards.length; j++)
@@ -109,7 +109,7 @@ public class HandGenerator {
 						cards[i] = new Card(v, s);
 						i += 1;
 					}
-					if ((((Rules.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.fourOfAKind.ordinal()){
+					if ((((Ranks.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.fourOfAKind.ordinal()){
 						errors += 1;
 //						System.out.print("wrong eval");
 //						for (int j = 0; j < cards.length; j++)
@@ -133,7 +133,7 @@ public class HandGenerator {
 					cards[i] = new Card(Value.value.values()[k], s);
 					i += 1;
 				}
-				if ((((Rules.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.straightFlush.ordinal()){
+				if ((((Ranks.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.straightFlush.ordinal()){
 					errors += 1;
 //					System.out.print("wrong eval");
 //					for (int j = 0; j < cards.length; j++)
@@ -157,7 +157,7 @@ public class HandGenerator {
 					i += 1;
 				}
 			}
-			if ((((Rules.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.royalFlush.ordinal()){
+			if ((((Ranks.findScore(cards) & 0xf00000) >> 0x14) - 6)  != Value.hands.royalFlush.ordinal()){
 				errors += 1;
 //				System.out.print("wrong eval" + cards);
 //				for (int j = 0; j < cards.length; j++)

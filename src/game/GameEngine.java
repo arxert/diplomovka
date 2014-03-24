@@ -1,13 +1,13 @@
 package game;
 
-import helps.Bank;
-import helps.Rules;
-
 import java.util.Arrays;
+
+import helps.Bank;
+import helps.Ranks;
 
 import bots.Bot;
 
-import computes.Probability;
+//import computes.Probability;
 
 import utils.ListOfPlayers;
 import utils.Value;
@@ -28,7 +28,7 @@ public class GameEngine {
 	
 	private Card[] deck = new Card[5];
 	
-	private double initChips = 50000;
+	private double initChips = 500000;
 	
 	private Bank bank;
 	
@@ -36,7 +36,7 @@ public class GameEngine {
 	
 	private ListOfPlayers players = new ListOfPlayers(initChips);
 	
-	private Probability probab = new Probability();
+//	private Probability probab = new Probability();
 	
 	private int rounds = 0;
 	private int speed = 0;
@@ -63,11 +63,6 @@ public class GameEngine {
 		viewEngine.dealCard(bot.getID(), c1, c2);
 	}
 	
-	private void setNoneState(int ID){
-		players.getPlayer(ID).setState(Value.state.none);
-		viewEngine.setAction(ID, state.none, 0);
-	}
-	
 	public int getRounds(){
 		return rounds;
 	}
@@ -78,37 +73,16 @@ public class GameEngine {
 	
 	/****** player's actions *****/
 	
-	public void fold(int ID){
-		viewEngine.setAction(ID, state.folded, 0);
+	public void setAction(int ID, state state, double chips){
+		bank.addChips(chips);
+		viewEngine.setAction(ID, state, chips);
 		viewEngine.setTxtLog("" + bank.getChips());
-		gameState.addAction(0, ID, Value.state.folded);
+		gameState.addAction(ID, state, chips);
 	}
 	
-	public void check(int ID){
-		viewEngine.setAction(ID, state.checked, 0);
-		viewEngine.setTxtLog("" + bank.getChips());
-		gameState.addAction(0, ID, Value.state.checked);
-	}
-	
-	public void call(int ID, double chips){
-		bank.addChips(chips);
-		viewEngine.setAction(ID, state.called, chips);
-		viewEngine.setTxtLog("" + bank.getChips());
-		gameState.addAction(chips, ID, Value.state.called);
-	}
-	
-	public void raise(int ID, double chips){
-		bank.addChips(chips);
-		viewEngine.setAction(ID, state.raised, chips);
-		viewEngine.setTxtLog("" + bank.getChips());
-		gameState.addAction(chips, ID, Value.state.raised);
-	}
-
-	public void allIn(int ID, double chips){
-		bank.addChips(chips);
-		viewEngine.setAction(ID, state.allIn, chips);
-		viewEngine.setTxtLog("" + bank.getChips());
-		gameState.addAction(chips, ID, Value.state.allIn);
+	private void setNoneState(int ID){
+		players.getPlayer(ID).setState(Value.state.none);
+		viewEngine.setAction(ID, state.none, 0);
 	}
 	
 	public void plLeft(int ID){
@@ -151,22 +125,28 @@ public class GameEngine {
 				setDealer();
 				gameState = new State(dealer, smallBlinds[actBlindIndex], players);
 				playRounds();
-				if (speed != 0) try { Thread.sleep(speed);} catch (Exception e) {e.printStackTrace(); }
+				if (speed != 0) try { Thread.sleep(speed);} catch (Exception e) {System.out.println(e);}
 				viewEngine.newRound(false);
 				players.checkChipsAll();
-				if (players.getSize() == 1){
-					System.out.println("winner is " + players.getAllPlayers().get(0).getName() + players.getAllPlayers().get(0).getID());
-					end = true;
+				if (isWinner())
 					break;
-				}
-				if (speed != 0) try {Thread.sleep(speed);} catch (Exception e) {}
+				if (speed != 0) try {Thread.sleep(speed);} catch (Exception e) {System.out.println(e);}
 			}
 		}
 //		probab.write();
-		probab.saveProbability();
+//		probab.saveProbability();
 //		try {Thread.sleep(1000);} catch (Exception e1) {e1.printStackTrace();}
 //		probab.loadProbability();
 		System.out.println("game ended");
+	}
+	
+	private boolean isWinner(){
+		if (players.getSize() == 1){
+			System.out.println("winner is " + players.getAllPlayers().get(0).getName() + players.getAllPlayers().get(0).getID());
+			end = true;
+			return true;
+		}
+		return false;
 	}
 	
 	private void setDealer(){
@@ -185,14 +165,14 @@ public class GameEngine {
 		
 		sb = pl.payBlinds(smallBlinds[actBlindIndex]);
 		bank.addChips(sb);
-		gameState.addAction(sb, pl.getID(), Value.state.smallBlind);
-		viewEngine.setAction(pl.getID(), state.smallBlind, smallBlinds[actBlindIndex]);
+		gameState.addAction(pl.getID(), Value.state.smallBlind, sb);
+		viewEngine.setAction(pl.getID(), state.smallBlind, sb);
 		
 		pl = players.getNextActivePlayer(pl.getID());
 		bb = pl.payBlinds(bigBlind);
 		bank.addChips(bb);
-		gameState.addAction(bb, pl.getID(), Value.state.bigBlind);
-		viewEngine.setAction(pl.getID(), state.bigBlind, bigBlind);
+		gameState.addAction(pl.getID(), state.bigBlind, bb);
+		viewEngine.setAction(pl.getID(), state.bigBlind, bb);
 	}
 	
 	private void dealCardsToAllPlayers(){
@@ -230,11 +210,11 @@ public class GameEngine {
 		return players.getActivePlayers().size() > 1;
 	}
 	
-	// TODO state
+	// TODO
 	private void botActions(int round){
 		double max = 0;
 		if (round == 0){
-//			setBlinds();
+			setBlinds();
 			max = bigBlind;
 		}
 		Bot b = players.getNextActivePlayer(players.getNextActivePlayer(players.getNextActivePlayer(dealer).getID()).getID());
@@ -245,7 +225,7 @@ public class GameEngine {
 			if (ID == -1)
 				ID = b.getID();
 			gameState.setBank(bank.getChips());
-			b.act(max, gameState);
+			b.act(max, gameState.getState());
 			if (!b.getState().equals(Value.state.folded)){
 				if (b.getRoundStake() > max){
 					max = b.getRoundStake();
@@ -272,10 +252,9 @@ public class GameEngine {
 		talon.shuffle();
 		for (Bot bot: players.getAllPlayers()){
 			setNoneState(bot.getID());
-			bot.setScore(0);
-			bot.nullStakes();
+			bot.nullEverything();
 		}
-		deck = new Card[5];
+		Arrays.fill(deck, null);
 		viewEngine.newRound(true);
 	}
 	
@@ -300,22 +279,11 @@ public class GameEngine {
 		viewEngine.setRiver(deck[4]);
 	}
 	
-	private Card[] joinCards(Card[] cards1, Card[] cards2, int size){
-		Card[] res;
-		res = Arrays.copyOf(cards1, size);
-		for (int i = cards1.length; i < size; i++){
-			res[i] = new Card(cards2[i - cards1.length].getValue(), cards2[i - cards1.length].getSuit());
-		}
-		return res;
-	}
-	
 	private int setAllScores(){
 		int score;
 		int max = 0;
-		Card[] cards;
 		for (Bot bot: players.getActivePlayers()){
-			cards = joinCards(deck, bot.getCards(), 7);
-			score = Rules.findScore(cards);
+			score = Ranks.findScore(Value.concatCards(deck, bot.getCards()));
 			bot.setScore(score);
 			if (score >= max){
 				max = score;
@@ -326,10 +294,9 @@ public class GameEngine {
 //					System.out.print(", " + cards[i]);
 //				System.out.println();
 		}
-		// add to log
 		for (Bot bot: players.getActivePlayers()){
 			if (bot.getScore() == max){
-				probab.addCard(bot.getCard1(), bot.getCard2());
+//				probab.addCard(bot.getCard1(), bot.getCard2());
 				viewEngine.addStats(bot.getCard1(), bot.getCard2());
 			}
 		}

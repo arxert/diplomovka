@@ -16,6 +16,8 @@ import javax.swing.event.ChangeListener;
 import bots.Bot;
 import bots.Person;
 
+
+
 public class PlayerWindow extends ViewWindow {
 
 	private static final long serialVersionUID = 1L;

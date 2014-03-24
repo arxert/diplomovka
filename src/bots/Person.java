@@ -1,7 +1,7 @@
 package bots;
 
-import game.State;
 import view.PlayerWindow;
+import game.State;
 
 public class Person extends Bot {
 

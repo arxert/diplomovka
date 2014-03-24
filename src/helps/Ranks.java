@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 import utils.Value.value;
 
-public class Rules {
+public class Ranks {
 
 //	public static enum hands {highCard, onePair, twoPair, triple, straight, flush, fullHouse, fourOfAKind, straightFlush, royalFlush};
 	

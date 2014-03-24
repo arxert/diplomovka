@@ -2,7 +2,6 @@ package view;
 
 import game.Card;
 import game.GameEngine;
-import game.Talon;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,7 +36,7 @@ public class GamePanel extends JPanel {
 	
 	private JLabel[] cards = new JLabel[5];
 	
-	private Card emptyCard = Talon.getEmptyCard();
+	private Card emptyCard = Value.emptyCard;
 	
 	private JTextField txtLog = new JTextField();
 	

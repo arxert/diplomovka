@@ -4,23 +4,22 @@ import java.util.ArrayList;
 
 import bots.Bot;
 
-
 import utils.ListOfPlayers;
 import utils.Value.*;
 
-public class State {
+public class State implements Cloneable {
 
-	int round, dealerID;
-	int smallBlind, bigBlind;
-	double bank;
-	Card[] cards;
-	ArrayList<Round> rounds = new ArrayList<>();
-	ArrayList<Player> players = new ArrayList<>();
+	public int round, dealerID;
+	public int smallBlind, bigBlind;
+	public double bank;
+	public Card[] deck;
+	public ArrayList<Round> rounds = new ArrayList<>();
+	public ArrayList<Player> players = new ArrayList<>();
 	
 	class Action {
-		double amount;
-		int botID;
-		state state;
+		public double amount;
+		public int botID;
+		public state state;
 		
 		public Action(double amount, int botID, state state){
 			this.amount = amount;
@@ -30,8 +29,8 @@ public class State {
 	}
 	
 	class Round {
-		ArrayList<Action> actions = new ArrayList<>();		
-		int round;
+		public ArrayList<Action> actions = new ArrayList<>();		
+		public int round;
 		
 		public Round(int round){
 			this.round = round;
@@ -43,10 +42,10 @@ public class State {
 	}
 	
 	class Player {
-		int id;
-		double stack;
-		double inGame;
-		state state;
+		public int id;
+		public double stack;
+		public double inGame;
+		public state state;
 		
 		public Player(int id, double stack, double inGame){
 			this.id = id;
@@ -76,10 +75,10 @@ public class State {
 	public void setRound(int round, Card[] cards){
 		this.round = round;
 		this.rounds.add(new Round(round));
-		this.cards = cards;
+		this.deck = cards;
 	}
 	
-	public void addAction(double amount, int botID, state state){
+	public void addAction(int botID, state state, double amount){
 		rounds.get(round).addAction(new Action(amount, botID, state));
 		Player p = getPlayer(botID);
 		if (p != null) {
@@ -101,7 +100,7 @@ public class State {
 			res += "player " + p.id + " (" + p.stack + ", " + p.inGame + ", " + p.state + "), ";
 		}
 		res += "\ncards: ";
-		for (Card c: cards){
+		for (Card c: deck){
 			res += c + ", ";
 		}
 		res += "\n";
@@ -111,5 +110,14 @@ public class State {
 				res += "player " + a.botID + " " + a.state + " (" + a.amount +  ")\n";
 		}
 		return res;
+	}
+	
+	public State getState(){
+		try {
+			return (State) this.clone();
+		} catch (CloneNotSupportedException e) {
+			System.out.println(e.toString());
+		}
+		return null;
 	}
 }

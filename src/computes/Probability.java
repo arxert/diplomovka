@@ -16,11 +16,14 @@ public class Probability implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static String fileName = "C:/SKOLA/dipl/probab.txt";
+//	private static String fileName = "C:/SKOLA/dipl/probab.txt";
+	private static String fileName = "C:/SKOLA/dipl/p2players.txt";
 	
 	private int values = Value.value.values().length;
 	private int suits = Value.suit.values().length;
 	private int all = suits * values;
+	
+	private int alll = 0;
 	
 	private int[][] cards = new int[all][all];
 	
@@ -34,8 +37,18 @@ public class Probability implements Serializable {
 		}
 	}
 	
-	public static void computeProbab(){
-		
+	public void computeProbab(){
+		for (int i = 0; i < all; i++){
+			for (int j = 0; j < i; j++){
+				alll += cards[i][j];
+			}
+		}
+		for (int i = 0; i < all; i++){
+			for (int j = 0; j < i; j++){
+				if ((double) cards[i][j] / alll * 1000 > 1)
+					System.out.println(getCard(i) + " " + getCard(j) + " - " + (double) cards[i][j] / alll * 1000);
+			}
+		}
 	}
 	
 	public void addCard(Card c1, Card c2){
@@ -48,10 +61,13 @@ public class Probability implements Serializable {
 	public void write(){
 		for (int i = 0; i < all; i++){
 			for (int j = 0; j < i; j++){
-				System.out.println(suit.values()[i / value.values().length] + "" + value.values()[i % value.values().length] + " " +
-					suit.values()[j / value.values().length] + "" + value.values()[j % value.values().length] + " - " + cards[i][j]);
+				System.out.println(getCard(i) + " " + getCard(j) + " - " + cards[i][j]);
 			}
 		}
+	}
+
+	private String getCard(int hash){
+		return suit.values()[hash / value.values().length] + "" + value.values()[hash % value.values().length];
 	}
 	
 	public static Probability loadProbability(){
@@ -59,7 +75,7 @@ public class Probability implements Serializable {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
 			Probability probab = (Probability) ois.readObject();
 			System.out.println("this is loaded Probability...");
-		    probab.write();
+//		    probab.write();
 		    ois.close();
 		    return probab;
 		 } catch (Exception e) {

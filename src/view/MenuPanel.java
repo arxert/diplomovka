@@ -58,9 +58,9 @@ public class MenuPanel extends JFrame {
 	private void setListPlayers(){
 		for (int i = 0; i < nmrPlayers; i++){
 			listPlayers.add(new JComboBox<String>(Value.players));
-			if ((i == 2) || (i == 6))
-				listPlayers.get(i).setSelectedIndex(2);
-			if ((i == 3) || (i > 6))
+//			if ((i == 2) || (i == 3) || (i > 6))
+//				listPlayers.get(i).setSelectedIndex(2);
+			if ((i == 3) || (i == 6))
 				listPlayers.get(i).setSelectedIndex(2);
 		}
 	}
