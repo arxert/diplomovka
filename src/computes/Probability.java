@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import game.Card;
+//import game.Card;
 import utils.Value;
 import utils.Value.suit;
 import utils.Value.value;
@@ -51,11 +51,18 @@ public class Probability implements Serializable {
 		}
 	}
 	
-	public void addCard(Card c1, Card c2){
-		if (c1.getHash() > c2.getHash())
-			cards[c1.getHash()][c2.getHash()] += 1;
+//	public void addCard(Card c1, Card c2){
+//		if (c1.getHash() > c2.getHash())
+//			cards[c1.getHash()][c2.getHash()] += 1;
+//		else
+//			cards[c2.getHash()][c1.getHash()] += 1;
+//	}
+	
+	public void addCard(int c1, int c2){
+		if (c1 > c2)
+			cards[c1][c2] += 1;
 		else
-			cards[c2.getHash()][c1.getHash()] += 1;
+			cards[c2][c1] += 1;
 	}
 	
 	public void write(){

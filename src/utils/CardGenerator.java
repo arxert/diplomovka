@@ -23,7 +23,7 @@ public class CardGenerator {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<Card> getCards(){
 		return (ArrayList<Card>) cards.clone();

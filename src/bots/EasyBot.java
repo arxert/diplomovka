@@ -34,7 +34,6 @@ public class EasyBot extends Bot {
 		simpleAct(max);
 //		call(max);
 //		manageState();
-//		check();
 	}
 	
 	private void simpleAct(double max){
@@ -59,12 +58,12 @@ public class EasyBot extends Bot {
 	private void manageState(){
 		if (state.round == 0)
 			cards = cGen.getCards();
-//		if (state.round == 1)
-//			round1();
-//		if (state.round == 2)
-//			round2();
-//		if (state.round == 3)
-//			round3();
+		if (state.round == 1)
+			round1();
+		if (state.round == 2)
+			round2();
+		if (state.round == 3)
+			round3();
 	}
 	
 	private void round1(){
@@ -97,7 +96,7 @@ public class EasyBot extends Bot {
 				}
 			}
 		}
-		System.out.println("this is ID " + ID + " - " + (double) good / all);
+		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
 	}
 	
 	private void round2(){
@@ -126,7 +125,7 @@ public class EasyBot extends Bot {
 				}
 			}
 		}
-//		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
+		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
 	}
 	
 	private void round3(){
@@ -150,6 +149,6 @@ public class EasyBot extends Bot {
 				}
 			}
 		}
-//		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
+		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
 	}
 }

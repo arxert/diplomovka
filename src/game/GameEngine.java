@@ -40,7 +40,6 @@ public class GameEngine {
 	
 	private int rounds = 0;
 	private int speed = 0;
-//	private int smallBlind = 10, bigBlind = smallBlind * 2;
 
 	private int actBlindIndex = 0;
 	private int smallBlinds[] = {25, 50, 100, 250, 500, 1000, 1500, 2000, 5000, 10000, 15000, 25000, 50000, 100000};
@@ -125,12 +124,12 @@ public class GameEngine {
 				setDealer();
 				gameState = new State(dealer, smallBlinds[actBlindIndex], players);
 				playRounds();
-				if (speed != 0) try { Thread.sleep(speed);} catch (Exception e) {System.out.println(e);}
+				if (speed != 0) try { Thread.sleep(speed);} catch (Exception e) {}
 				viewEngine.newRound(false);
 				players.checkChipsAll();
 				if (isWinner())
 					break;
-				if (speed != 0) try {Thread.sleep(speed);} catch (Exception e) {System.out.println(e);}
+				if (speed != 0) try {Thread.sleep(speed);} catch (Exception e) {}
 			}
 		}
 //		probab.write();
@@ -214,7 +213,7 @@ public class GameEngine {
 	private void botActions(int round){
 		double max = 0;
 		if (round == 0){
-			setBlinds();
+//			setBlinds();
 			max = bigBlind;
 		}
 		Bot b = players.getNextActivePlayer(players.getNextActivePlayer(players.getNextActivePlayer(dealer).getID()).getID());
@@ -235,7 +234,7 @@ public class GameEngine {
 				if (ID == b.getID())
 					ID = -1;
 			}
-			if (players.getActivePlayers().size() == 1)
+			if (!isEnoughPlayers())
 				return;
 			b = players.getNextActivePlayer(b.getID());
 		} while (ID != b.getID());

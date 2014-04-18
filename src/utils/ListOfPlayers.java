@@ -54,7 +54,6 @@ public class ListOfPlayers {
 		for (String s: pls){
 			if ((p = Value.createNewPlayer(s, i, chips)) != null){
 				p.setState(Value.state.none);
-//				p.setChips(chips);
 				players.add(p);
 			}
 			i += 1;
@@ -70,21 +69,13 @@ public class ListOfPlayers {
 		return null;
 	}
 	
-	public Bot getPlayer(String name){
-		for (Bot p: players){
-			if (name.equals(p.toString()))
-				return p;
-		}
-		return null;
-	}
-	
 	public int getSize(){
 		return size;
 	}
 	
 	public void removePlayer(int ID){
-		players.remove(getPlayer(ID));
-		size -= 1;
+		if (players.remove(getPlayer(ID)))
+			size -= 1;
 	}
 	
 	public void setEngine(GameEngine e){

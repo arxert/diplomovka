@@ -32,8 +32,8 @@ public class ViewEngine extends JFrame {
 	private StatisticsPanel statsPanel;
 	private ViewControlPanel gameControlPanel;
 
-	public ViewEngine(GameEngine gE, ListOfPlayers players){
-		this.gameEngine = gE;
+	public ViewEngine(GameEngine gameEngine, ListOfPlayers players){
+		this.gameEngine = gameEngine;
 		initFrame();
 		initComponents(players);
 		addComponents();

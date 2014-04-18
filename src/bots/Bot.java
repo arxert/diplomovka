@@ -30,6 +30,7 @@ public abstract class Bot {
 
 	public abstract void doAct(double max, State state);
 	
+	// TODO act if chips == 0
 	public void act(double max, State state){
 		steps = 0;
 		if (chips == 0){
