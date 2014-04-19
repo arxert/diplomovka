@@ -6,6 +6,18 @@ public class Main {
 
 	public static void main(String[] args) {
 		new MenuPanel();
+
+//		checking, if rank can rank 5 cards... and, imagine, it can..
+//		Talon t = new Talon();
+//		for (int j = 0; j < 50; j++){
+//			Card[] cards = new Card[5];
+//			for (int i = 0; i < cards.length; i++){
+//				cards[i] = t.getNextCard();
+//				System.out.print(cards[i] + " ");
+//			}
+//			System.out.println(Value.getScoreToString(Ranks.findScore(cards)));
+//		}
+		
 //		Probability p = Probability.loadProbability();
 //		p.write();
 //		p.computeProbab();

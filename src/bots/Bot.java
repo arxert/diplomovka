@@ -11,6 +11,8 @@ public abstract class Bot {
 	protected int ID;
 	protected int score;
 	
+	protected double pPot, nPot, ehs;
+	
 	protected double chips;
 	protected double totalStake;
 	protected double roundStake;
@@ -94,10 +96,6 @@ public abstract class Bot {
 	
 	public int getScore(){
 		return this.score;
-	}
-	
-	public String getScoreToString(){
-		return Value.hands.values()[((score & 0xf00000) >> 0x14) - 6].name();
 	}
 	
 	public void winsChips(double chips){

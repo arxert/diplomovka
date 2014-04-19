@@ -21,6 +21,10 @@ public class Value {
 		}
 	};
 	
+	public static String getScoreToString(int score){
+		return Value.hands.values()[((score & 0xf00000) >> 0x14) - 6].name();
+	}
+	
 	public static Comparator<Bot> handComparator = new Comparator<Bot>() {
 		public int compare(Bot b1, Bot b2) {
 			if (b2.getScore() == b1.getScore())

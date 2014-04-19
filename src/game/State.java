@@ -3,7 +3,6 @@ package game;
 import java.util.ArrayList;
 
 import bots.Bot;
-
 import utils.ListOfPlayers;
 import utils.Value.*;
 
@@ -112,12 +111,16 @@ public class State implements Cloneable {
 		return res;
 	}
 	
-	public State getState(){
+	private State getCopy(){
 		try {
 			return (State) this.clone();
 		} catch (CloneNotSupportedException e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public State getState(){
+		return getCopy();
 	}
 }

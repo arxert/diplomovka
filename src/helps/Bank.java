@@ -57,7 +57,7 @@ public class Bank {
 				chips -= res;
 				b.winsChips(res);
 				split -= res;
-				result += ", " + b.getName() + b.getID() + " - " + res + " (" + b.getScoreToString() + ")";
+				result += ", " + b.getName() + b.getID() + " - " + res + " (" + Value.getScoreToString(b.getScore()) + ")";
 				b.setScore(0);
 			}
 		}

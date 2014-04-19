@@ -5,7 +5,10 @@ import game.State;
 import helps.Ranks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
+
+import computes.HandStrength;
 
 import utils.CardGenerator;
 import utils.Value;
@@ -66,8 +69,7 @@ public class EasyBot extends Bot {
 			round3();
 	}
 	
-	private void round1(){
-		int sMe = 0, sOther = 0, all = 0, good = 0;
+	private void removeCardsFromDeck(){
 		for (Card c: state.deck){
 			if (c != null){
 				for (int i = cards.size() - 1; i >= 0; i--){
@@ -78,59 +80,7 @@ public class EasyBot extends Bot {
 				}
 			}
 		}
-		for (int i = 0; i < cards.size() - 1; i++){
-			for (int j = i + 1; j < cards.size(); j++){
-				for (int k = 0; k < cards.size(); k++){
-					for (int l = k + 1; l < cards.size(); l++){
-						if (i != j && i != l && i != k && j != l && j != k){
-							state.deck[3] = cards.get(i);
-							state.deck[4] = cards.get(j);
-							all += 1;
-							sMe = Ranks.findScore(Value.concatCards(state.deck, getCards()));
-							sOther = Ranks.findScore(Value.concatCards(state.deck, new Card[] {cards.get(k), cards.get(l)}));
-							if (sMe >= sOther){
-								good += 1;
-							}
-						}
-					}
-				}
-			}
-		}
-		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
-	}
-	
-	private void round2(){
-		int sMe = 0, sOther = 0, all = 0, good = 0;
-		for (Card c: state.deck){
-			if (c != null){
-				for (int i = cards.size() - 1; i >= 0; i--){
-					if (c.getHash() == cards.get(i).getHash()){
-						cards.remove(i);
-						break;
-					}
-				}
-			}
-		}
-		for (int i = 0; i < cards.size() - 1; i++){
-			state.deck[4] = cards.get(i);
-			for (int k = 0; k < cards.size(); k++){
-				for (int l = k + 1; l < cards.size(); l++){
-					if (i != l && i != k && k != l){
-						all += 1;
-						sMe = Ranks.findScore(Value.concatCards(state.deck, getCards()));
-						sOther = Ranks.findScore(Value.concatCards(state.deck, new Card[] {cards.get(k), cards.get(l)}));
-						if (sMe >= sOther)
-							good += 1;
-					}
-				}
-			}
-		}
-		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
-	}
-	
-	private void round3(){
-		int sMe = 0, sOther = 0, all = 0, good = 0;
-		for (Card c: state.deck){
+		for (Card c: getCards()){
 			for (int i = cards.size() - 1; i >= 0; i--){
 				if (c.getHash() == cards.get(i).getHash()){
 					cards.remove(i);
@@ -138,17 +88,136 @@ public class EasyBot extends Bot {
 				}
 			}
 		}
-		for (int k = 0; k < cards.size() - 1; k++){
-			for (int l = k + 1; l < cards.size(); l++){
-				if (k != l){
-					all += 1;
-					sMe = Ranks.findScore(Value.concatCards(state.deck, getCards()));
-					sOther = Ranks.findScore(Value.concatCards(state.deck, new Card[] {cards.get(k), cards.get(l)}));
-					if (sMe >= sOther)
-						good += 1;
+	}
+	
+	private void countEffectiveHandStrength(){
+		int[][] hp = new int[3][3];
+		int[] hpTot = new int[3];
+		Card[] board = Arrays.copyOf(state.deck, 5);
+		Card[] opCards = new Card[2];
+		board[3] = getCard1();
+		board[4] = getCard2();
+		int myRank = Ranks.findScore(board);
+		int opRank, index;
+		double pPot, nPot;
+		int allHp = 0, allHpTot = 0;
+		for (int i = 0; i < cards.size(); i++){
+			opCards[0] = cards.get(i);
+			for (int j = i + 1; j < cards.size(); j++){
+				opCards[1] = cards.get(j);
+				board[3] = opCards[0];
+				board[4] = opCards[1];
+				opRank = Ranks.findScore(board);
+				if (myRank > opRank)
+					index = 0;
+				else if (myRank == opRank)
+					index = 1;
+				else
+					index = 2;
+				hpTot[index] += 1;
+				allHpTot += 1;
+				for (int k = 0; k < cards.size() - 1; k++){
+					for (int l = k + 1; l < cards.size(); l++){
+						if (i != k && i != l && j != k && j != l){
+							board[3] = cards.get(k);
+							board[4] = cards.get(l);
+							myRank = Ranks.findScore(Value.concatCards(board, getCards()));
+							opRank = Ranks.findScore(Value.concatCards(board, opCards));
+							if (myRank > opRank)
+								hp[index][0] += 1;
+							else if (myRank == opRank)
+								hp[index][1] += 1;
+							else
+								hp[index][2] += 1;
+							allHp += 1;
+						}
+					}
 				}
 			}
 		}
-		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) good / all);
+//		for (int i = 0; i < 3; i++){
+//			System.out.print(hpTot[i] + " ");
+//		}
+//		System.out.println();
+//		for (int i = 0; i < 3; i++){
+//			for (int j = 0; j < 3; j++){
+//				System.out.print(hp[i][j] + " ");
+//			}
+//			System.out.println();
+//		}
+
+		pPot = ((double) (hp[1][0]/2 + hp[2][0] + hp[2][1]/2) / allHp) / ((double) (hpTot[2] + hpTot[1]/2) / allHpTot);
+		nPot = ((double) (hp[0][1]/2 + hp[0][2] + hp[1][2]/2) / allHp) / ((double) (hpTot[0] + hpTot[1]/2) / allHpTot);
+		
+//		pPot = (double) (hp[2][0] + hp[2][1]/2 + hp[1][0]/2) / (hpTot[2] + hpTot[1]);
+//		nPot = (double) (hp[0][2] + hp[1][2]/2 + hp[0][1]/2) / (hpTot[0] + hpTot[1]);
+//		Ppot = (HP[behind][ahead]+HP[behind][tied]/2+HP[tied][ahead]/2)/(HPTotal[behind]+HPTotal[tied])
+//		Npot = (HP[ahead][behind]+HP[tied][behind]/2+HP[ahead][tied]/2)/(HPTotal[ahead]+HPTotal[tied])
+		this.pPot = pPot;
+		this.nPot = nPot;
+//		this.pPot = (double) pPot / (pPot + nPot);
+//		this.nPot = 1 - this.pPot;
+		System.out.println(this.pPot + " " + this.nPot);
+		state.deck[3] = null;
+		state.deck[4] = null;
+	}
+	
+	private double countHandStrenght(int i, int j){
+		int all = 0, good = 0;
+		int myRank = Ranks.findScore(Value.concatCards(state.deck, getCards()));
+		int opRank;
+		for (int k = 0; k < cards.size(); k++){
+			for (int l = k + 1; l < cards.size(); l++){
+				if (k != i && k != j && l != i && l != j){
+					opRank = Ranks.findScore(Value.concatCards(state.deck, new Card[] {cards.get(k), cards.get(l)}));
+					if (myRank >= opRank)
+						good += 1;
+					all += 1;
+				}
+			}
+		}
+		return (double) good / all;
+	}
+	
+	private void round1(){
+		int all = 0;
+		double hs = 0;
+		removeCardsFromDeck();
+		for (int i = 0; i < cards.size() - 1; i++){
+			for (int j = i + 1; j < cards.size(); j++){
+				state.deck[3] = cards.get(i);
+				state.deck[4] = cards.get(j);
+				hs += countHandStrenght(i, j);
+				all += 1;
+			}
+		}
+		hs = (double) hs / all;
+		state.deck[3] = null;
+		state.deck[4] = null;
+		System.out.println(hs - HandStrength.countHandStrenght(state.deck, getCards(), cards));
+		
+//		countEffectiveHandStrength();
+//		ehs = hs * (1 - nPot) + (1 - hs) * pPot;
+//		System.out.println(ehs);
+		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) hs);
+	}
+	
+	private void round2(){
+		int all = 0;
+		double hs = 0;
+		removeCardsFromDeck();
+		for (int i = 0; i < cards.size() - 1; i++){
+			state.deck[4] = cards.get(i);
+			hs += countHandStrenght(-1, i);
+			all += 1;
+		}
+		state.deck[4] = null;
+		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) hs / all);
+	}
+	
+	private void round3(){
+		removeCardsFromDeck();
+		double hs = countHandStrenght(-1, -1);
+		System.out.println("ID = " + ID + ", round = " + state.round + " - " + hs);
 	}
 }
