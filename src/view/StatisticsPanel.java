@@ -1,7 +1,7 @@
 package view;
 
 import utils.TXTPanel;
-import game.Card;
+import utils.Value;
 
 public class StatisticsPanel extends TXTPanel {
 
@@ -11,7 +11,7 @@ public class StatisticsPanel extends TXTPanel {
 		super();
 	}
 	
-	public void statsCards(Card c1, Card c2){
-		addLog(c1 + " " + c2);
+	public void statsCards(Integer c1, Integer c2){
+		addLog(Value.getCardName(c1) + " " + Value.getCardName(c1));
 	}
 }

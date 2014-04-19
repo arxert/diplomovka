@@ -70,6 +70,7 @@ public class MenuPanel extends JFrame {
 		btnNewGame.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
+				Value.init();
 				new GameEngine(getPlayers());
 			}
 		});

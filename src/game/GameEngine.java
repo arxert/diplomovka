@@ -26,7 +26,7 @@ public class GameEngine {
 	
 	private int dealer = 0;
 	
-	private Card[] deck = new Card[5];
+	private Integer[] deck = new Integer[5];
 	
 	private double initChips = 500000;
 	
@@ -53,11 +53,11 @@ public class GameEngine {
 		startGame();
 	}
 	
-	private Card getDealedCard(){
+	private Integer getDealedCard(){
 		return talon.getNextCard();
 	}
 
-	private void dealCards(Bot bot, Card c1, Card c2){
+	private void dealCards(Bot bot, Integer c1, Integer c2){
 		bot.dealCards(c1, c2);
 		viewEngine.dealCard(bot.getID(), c1, c2);
 	}

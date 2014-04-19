@@ -1,6 +1,5 @@
 package bots;
 
-import game.Card;
 import game.GameEngine;
 import game.State;
 import utils.Value;
@@ -19,7 +18,7 @@ public abstract class Bot {
 	
 	protected String name;
 	
-	protected Card c1, c2;
+	protected Integer c1, c2;
 	
 	protected Value.state state;
 
@@ -53,7 +52,7 @@ public abstract class Bot {
 		this.engine = engine;
 	}
 	
-	public void dealCards(Card c1, Card c2){
+	public void dealCards(Integer c1, Integer c2){
 		this.c1 = c1;
 		this.c2 = c2;
 	}
@@ -78,15 +77,15 @@ public abstract class Bot {
 		return state;
 	}
 	
-	public Card[] getCards(){
-		return new Card[] {c1, c2};
+	public Integer[] getCards(){
+		return new Integer[] {c1, c2};
 	}
 	
-	public Card getCard1(){
+	public Integer getCard1(){
 		return this.c1;
 	}
 	
-	public Card getCard2(){
+	public Integer getCard2(){
 		return this.c2;
 	}
 	

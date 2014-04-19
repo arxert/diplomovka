@@ -11,7 +11,7 @@ public class State implements Cloneable {
 	public int round, dealerID;
 	public int smallBlind, bigBlind;
 	public double bank;
-	public Card[] deck;
+	public Integer[] deck;
 	public ArrayList<Round> rounds = new ArrayList<>();
 	public ArrayList<Player> players = new ArrayList<>();
 	
@@ -71,7 +71,7 @@ public class State implements Cloneable {
 		this.bank = bank;
 	}
 	
-	public void setRound(int round, Card[] cards){
+	public void setRound(int round, Integer[] cards){
 		this.round = round;
 		this.rounds.add(new Round(round));
 		this.deck = cards;
@@ -99,7 +99,7 @@ public class State implements Cloneable {
 			res += "player " + p.id + " (" + p.stack + ", " + p.inGame + ", " + p.state + "), ";
 		}
 		res += "\ncards: ";
-		for (Card c: deck){
+		for (Integer c: deck){
 			res += c + ", ";
 		}
 		res += "\n";

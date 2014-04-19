@@ -1,6 +1,5 @@
 package bots;
 
-import game.Card;
 import game.State;
 import helps.Ranks;
 
@@ -17,9 +16,10 @@ public class EasyBot extends Bot {
 
 	private static String staticName = "Easy bot";
 	private State state;
+	private Integer[] deck;
 
 	private CardGenerator cGen = new CardGenerator();
-	private ArrayList<Card> cards;
+	private ArrayList<Integer> cards;
 	
 	public EasyBot(int id, double chips) {
 		super(id, chips);
@@ -33,10 +33,11 @@ public class EasyBot extends Bot {
 	@Override
 	public void doAct(double max, State state) {
 		this.state = state;
+		deck = state.deck;
 		max -= roundStake;
-		simpleAct(max);
-//		call(max);
-//		manageState();
+//		simpleAct(max);
+		call(max);
+		manageState();
 	}
 	
 	private void simpleAct(double max){
@@ -70,19 +71,19 @@ public class EasyBot extends Bot {
 	}
 	
 	private void removeCardsFromDeck(){
-		for (Card c: state.deck){
+		for (Integer c: deck){
 			if (c != null){
 				for (int i = cards.size() - 1; i >= 0; i--){
-					if (c.getHash() == cards.get(i).getHash()){
+					if (c == cards.get(i)){
 						cards.remove(i);
 						break;
 					}
 				}
 			}
 		}
-		for (Card c: getCards()){
+		for (Integer c: getCards()){
 			for (int i = cards.size() - 1; i >= 0; i--){
-				if (c.getHash() == cards.get(i).getHash()){
+				if (c == cards.get(i)){
 					cards.remove(i);
 					break;
 				}
@@ -93,8 +94,8 @@ public class EasyBot extends Bot {
 	private void countEffectiveHandStrength(){
 		int[][] hp = new int[3][3];
 		int[] hpTot = new int[3];
-		Card[] board = Arrays.copyOf(state.deck, 5);
-		Card[] opCards = new Card[2];
+		Integer[] board = Arrays.copyOf(deck, 5);
+		Integer[] opCards = new Integer[2];
 		board[3] = getCard1();
 		board[4] = getCard2();
 		int myRank = Ranks.findScore(board);
@@ -158,18 +159,18 @@ public class EasyBot extends Bot {
 //		this.pPot = (double) pPot / (pPot + nPot);
 //		this.nPot = 1 - this.pPot;
 		System.out.println(this.pPot + " " + this.nPot);
-		state.deck[3] = null;
-		state.deck[4] = null;
+		deck[3] = null;
+		deck[4] = null;
 	}
 	
 	private double countHandStrenght(int i, int j){
 		int all = 0, good = 0;
-		int myRank = Ranks.findScore(Value.concatCards(state.deck, getCards()));
+		int myRank = Ranks.findScore(Value.concatCards(deck, getCards()));
 		int opRank;
 		for (int k = 0; k < cards.size(); k++){
 			for (int l = k + 1; l < cards.size(); l++){
 				if (k != i && k != j && l != i && l != j){
-					opRank = Ranks.findScore(Value.concatCards(state.deck, new Card[] {cards.get(k), cards.get(l)}));
+					opRank = Ranks.findScore(Value.concatCards(deck, new Integer[] {cards.get(k), cards.get(l)}));
 					if (myRank >= opRank)
 						good += 1;
 					all += 1;
@@ -185,20 +186,21 @@ public class EasyBot extends Bot {
 		removeCardsFromDeck();
 		for (int i = 0; i < cards.size() - 1; i++){
 			for (int j = i + 1; j < cards.size(); j++){
-				state.deck[3] = cards.get(i);
-				state.deck[4] = cards.get(j);
+				deck[3] = cards.get(i);
+				deck[4] = cards.get(j);
 				hs += countHandStrenght(i, j);
 				all += 1;
 			}
 		}
 		hs = (double) hs / all;
-		state.deck[3] = null;
-		state.deck[4] = null;
-		System.out.println(hs - HandStrength.countHandStrenght(state.deck, getCards(), cards));
+		deck[3] = null;
+		deck[4] = null;
+//		System.out.println(hs - HandStrength.countHandStrenght(state.deck, getCards(), cards));
+		System.out.println(hs);
 		
-//		countEffectiveHandStrength();
-//		ehs = hs * (1 - nPot) + (1 - hs) * pPot;
-//		System.out.println(ehs);
+		countEffectiveHandStrength();
+		ehs = hs * (1 - nPot) + (1 - hs) * pPot;
+		System.out.println(ehs);
 		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) hs);
 	}
 	
@@ -207,11 +209,11 @@ public class EasyBot extends Bot {
 		double hs = 0;
 		removeCardsFromDeck();
 		for (int i = 0; i < cards.size() - 1; i++){
-			state.deck[4] = cards.get(i);
+			deck[4] = cards.get(i);
 			hs += countHandStrenght(-1, i);
 			all += 1;
 		}
-		state.deck[4] = null;
+		deck[4] = null;
 		System.out.println("ID = " + ID + ", round = " + state.round + " - " + (double) hs / all);
 	}
 	

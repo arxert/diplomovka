@@ -1,7 +1,7 @@
 package view;
 
-import game.Card;
 import game.GameEngine;
+import game.ViewEngine;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import bots.Person;
-
 import utils.*;
 import utils.Value.state;
 
@@ -35,8 +34,6 @@ public class GamePanel extends JPanel {
 	private JPanel pnlCenter = new JPanel();
 	
 	private JLabel[] cards = new JLabel[5];
-	
-	private Card emptyCard = Value.emptyCard;
 	
 	private JTextField txtLog = new JTextField();
 	
@@ -68,25 +65,25 @@ public class GamePanel extends JPanel {
 	
 	private void resetCards(){
 		for (JLabel c: cards)
-			c.setIcon(emptyCard.getIcon());
+			c.setIcon(ViewEngine.getEmptyIcon());
 	}
 	
-	public void setFlop(Card c1, Card c2, Card c3){
+	public void setFlop(Integer c1, Integer c2, Integer c3){
 		if (canRun) {
-			cards[0].setIcon(c1.getIcon());
-			cards[1].setIcon(c2.getIcon());
-			cards[2].setIcon(c3.getIcon());
+			cards[0].setIcon(ViewEngine.getIcon(c1));
+			cards[1].setIcon(ViewEngine.getIcon(c2));
+			cards[2].setIcon(ViewEngine.getIcon(c3));
 		}
 	}
 	
-	public void setTurn(Card c){
+	public void setTurn(Integer c){
 		if (canRun)
-			cards[3].setIcon(c.getIcon());
+			cards[3].setIcon(ViewEngine.getIcon(c));
 	}
 	
-	public void setRiver(Card c){
+	public void setRiver(Integer c){
 		if (canRun)
-			cards[4].setIcon(c.getIcon());
+			cards[4].setIcon(ViewEngine.getIcon(c));
 	}
 	
 	private void initPanel(){

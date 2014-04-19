@@ -7,7 +7,7 @@ import utils.CardGenerator;
 
 public class Talon {
 
-	private ArrayList<Card> cards = new ArrayList<>();
+	private ArrayList<Integer> cards = new ArrayList<>();
 	private static CardGenerator cGen = new CardGenerator();
 	private int index = 0, size = 0;
 	
@@ -16,7 +16,7 @@ public class Talon {
 		shuffle();
 	}
 	
-	public Card getNextCard(){
+	public Integer getNextCard(){
 		index = (index + 1) % size;
 		return cards.get(index);
 	}

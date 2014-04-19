@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import game.GameEngine;
+import game.ViewEngine;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -13,8 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import bots.Bot;
-
-
 import utils.Value;
 import utils.Value.state;
 
@@ -99,8 +98,8 @@ public class ViewWindow extends JPanel {
 	}
 	
 	public void updateCards(){
-		c1.setIcon(bot.getCard1().getIcon());
-		c2.setIcon(bot.getCard2().getIcon());
+		c1.setIcon(ViewEngine.getIcon(bot.getCard1()));
+		c2.setIcon(ViewEngine.getIcon(bot.getCard2()));
 	}
 	
 	private void setState(state state){
