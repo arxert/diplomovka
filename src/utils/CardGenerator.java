@@ -17,7 +17,7 @@ public class CardGenerator {
 		cards.clear();
 		for (suit s: Value.suit.values()){
 			for (value v: Value.value.values()){
-				cards.add(Value.createHash(v, s));
+				cards.add(Value.getHash(v, s));
 			}
 		}
 	}

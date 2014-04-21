@@ -4,14 +4,13 @@ import java.util.Arrays;
 
 import helps.Bank;
 import helps.Ranks;
-
 import bots.Bot;
 
 //import computes.Probability;
 
 import utils.ListOfPlayers;
 import utils.Value;
-import utils.Value.state;
+import utils.Value.*;
 
 public class GameEngine {
 	
@@ -177,6 +176,8 @@ public class GameEngine {
 	private void dealCardsToAllPlayers(){
 		for (Bot p: players.getAllPlayers()){
 			dealCards(p, getDealedCard(), getDealedCard());
+//			dealCards(p, Value.getHash(value._A, suit.DIAMONDS), Value.getHash(value._Q, suit.CLUBS));
+//			dealCards(p, Value.getHash(value._5, suit.HEARTS), Value.getHash(value._2, suit.HEARTS));
 		}
 	}
 
@@ -265,6 +266,9 @@ public class GameEngine {
 		for (int i = 0; i < 3; i++){
 			deck[i] = talon.getNextCard();
 		}
+//		deck[0] = Value.getHash(value._3, suit.HEARTS);
+//		deck[1] = Value.getHash(value._4, suit.CLUBS);
+//		deck[2] = Value.getHash(value._J, suit.HEARTS);
 		viewEngine.setFlop(deck[0], deck[1], deck[2]);
 	}
 	

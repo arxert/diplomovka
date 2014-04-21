@@ -38,7 +38,8 @@ public class Ranks {
 	}
 
 	public static int findScore(Integer[] cards){
-		return getHand(cards);
+		return getHand(Arrays.copyOf(cards, cards.length));
+//		return getHand(cards);
 	}
 
 	private static int getHand(Integer[] cards){

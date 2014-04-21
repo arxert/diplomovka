@@ -11,6 +11,7 @@ public abstract class Bot {
 	protected int score;
 	
 	protected double pPot, nPot, ehs;
+	protected double[] hs = new double[3];
 	
 	protected double chips;
 	protected double totalStake;

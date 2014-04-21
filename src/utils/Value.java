@@ -45,7 +45,7 @@ public class Value {
 		return suitsArray[hash];
 	}
 
-	public static Integer createHash(value value, suit suit){
+	public static Integer getHash(value value, suit suit){
 		return suit.ordinal() * valLength + value.ordinal();
 	}
 	
